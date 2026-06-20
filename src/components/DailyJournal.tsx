@@ -126,7 +126,7 @@ export default function DailyJournal({
             </div>
 
             <div className="p-8 rounded-[2rem] bg-white border border-slate-100 shadow-sm space-y-4">
-              <h4 className="text-[10px] font-bold font-mono uppercase text-slate-400 tracking-wider">Historical Context</h4>
+              <h4 className="text-[10px] font-bold font-mono uppercase text-slate-500 tracking-wider">Historical Context</h4>
               <p className="text-slate-700 text-sm leading-relaxed italic font-serif bg-slate-50 p-6 rounded-2xl border border-slate-100">
                 "{activeDetail.text}"
               </p>
@@ -136,7 +136,7 @@ export default function DailyJournal({
             <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
               {Object.entries(activeDetail.scores).map(([key, val]) => (
                 <div key={key} className="p-6 rounded-[2rem] bg-white border border-slate-100 shadow-xs flex flex-col justify-between">
-                  <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest block mb-1">{key}</span>
+                  <span className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest block mb-1">{key}</span>
                   <span className="text-3xl font-light text-slate-800 font-sans mt-2">{val}%</span>
                   <div className="mt-3 w-full bg-slate-50 h-1 rounded-full overflow-hidden">
                     <div 
@@ -161,7 +161,7 @@ export default function DailyJournal({
                 </div>
 
                 <div className="pt-6 border-t border-slate-100">
-                  <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-4 font-mono">Action Recovery Directives</h4>
+                  <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-4 font-mono">Action Recovery Directives</h4>
                   <div className="space-y-3">
                     {activeDetail.analysis?.recoveryActions.map((action, idx) => (
                       <div key={idx} className="flex items-start gap-3 text-slate-600 font-sans">
@@ -176,7 +176,7 @@ export default function DailyJournal({
               {/* Stress Triggers & Concerns details */}
               <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm md:col-span-5 space-y-8">
                 <div>
-                  <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-4 font-mono font-bold">Strain Trigger Analysis</h4>
+                  <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-4 font-mono font-bold">Strain Trigger Analysis</h4>
                   <div className="space-y-3">
                     {activeDetail.analysis?.stressTriggers.map((t, idx) => (
                       <div key={idx} className="p-4 bg-[#F9FAFB] rounded-2xl border border-slate-100 text-xs">
@@ -222,7 +222,7 @@ export default function DailyJournal({
             <div className="space-y-6 lg:col-span-7">
               <div className="space-y-2">
                 <h3 className="text-2xl font-light font-serif text-slate-800">Study Journal Logging</h3>
-                <p className="text-slate-400 text-xs font-sans">
+                <p className="text-slate-500 text-xs font-sans font-medium">
                   MindPilot AI isolates hidden emotional blocks, peer comparison anxiety, and fatigue pacing based on natural language keywords.
                 </p>
               </div>
@@ -232,7 +232,7 @@ export default function DailyJournal({
                   <label className="text-[13px] font-bold text-slate-700 tracking-wider block font-mono uppercase mb-1">
                     What happened today during your preparation?
                   </label>
-                  <p className="text-xs text-slate-400 font-sans leading-normal">
+                  <p className="text-xs text-slate-500 font-sans leading-normal font-medium">
                     Describe studied topics, hours invested, test outcomes, peer comparison speed, expectations pressure, and fatigue or physical energy levels.
                   </p>
                 </div>
@@ -243,7 +243,7 @@ export default function DailyJournal({
                   value={journalText}
                   onChange={(e) => setJournalText(e.target.value)}
                   placeholder="I studied 8 hours of organic chemistry but still feel like I'm behind CAT / GATE levels. Checked simulator test cutoffs and now I am doubting if I will make it. Sleep was only 5 hours..."
-                  className="w-full h-56 p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-600 leading-relaxed outline-none resize-none transition-all placeholder:text-slate-400 bg-slate-50/50"
+                  className="w-full h-56 p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-600 leading-relaxed outline-none resize-none transition-all placeholder:text-slate-500 bg-slate-50/50"
                 />
 
                 {errorMsg && (
@@ -279,7 +279,7 @@ export default function DailyJournal({
                         <div className="p-6 bg-[#F9FAFB] border border-slate-100 rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {Object.entries(manualScores).map(([key, value]) => (
                             <div key={key} className="space-y-1">
-                              <div className="flex justify-between text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+                              <div className="flex justify-between text-[10px] font-mono text-slate-500 uppercase tracking-widest">
                                 <span>{key} scale</span>
                                 <span className="font-bold text-slate-700">{value}%</span>
                               </div>
@@ -329,7 +329,7 @@ export default function DailyJournal({
                     <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin mb-6" />
                     <h4 className="text-lg font-light font-serif tracking-tight">Consulting AI Copilot</h4>
                     
-                    <p className="text-slate-400 text-[10px] font-mono uppercase tracking-widest mt-6 max-w-xs leading-relaxed">
+                    <p className="text-slate-300 text-[10px] font-mono uppercase tracking-widest mt-6 max-w-xs leading-relaxed">
                       {LOADING_PHASES[loadingPhaseIndex]}
                     </p>
 
@@ -353,7 +353,7 @@ export default function DailyJournal({
                     <div>
                       <h4 className="text-xs font-bold tracking-widest text-[#4f46e5] uppercase mb-1.5 font-mono">Academic Telemetry</h4>
                       <h3 className="text-lg font-light text-slate-800 font-serif">Why daily logging?</h3>
-                      <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                      <p className="text-xs text-slate-500 mt-2 leading-relaxed font-medium">
                         Standard mood trackers fail to notice critical preparation stresses like peer velocity comparisons, backlog pressure, mock test fears, or sleep duration trade-offs.
                       </p>
                     </div>
@@ -363,7 +363,7 @@ export default function DailyJournal({
                         <div className="w-5 h-5 rounded-full bg-[#f4f7fb] text-indigo-600 flex items-center justify-center font-bold font-mono text-[10px]">1</div>
                         <div>
                           <p className="font-semibold text-slate-800">Trigger Isolation</p>
-                          <p className="mt-0.5 text-slate-400 leading-normal font-light">Separates expectations panic from master pacing struggles automatically.</p>
+                          <p className="mt-0.5 text-slate-500 leading-normal font-medium">Separates expectations panic from master pacing struggles automatically.</p>
                         </div>
                       </div>
 
@@ -371,7 +371,7 @@ export default function DailyJournal({
                         <div className="w-5 h-5 rounded-full bg-[#f4f7fb] text-orange-600 flex items-center justify-center font-bold font-mono text-[10px]">2</div>
                         <div>
                           <p className="font-semibold text-slate-800">Fatigue Pacing</p>
-                          <p className="mt-0.5 text-slate-400 leading-normal font-light">Tracks cognitive stamina index to notify student when revision should replace high-stress tests.</p>
+                          <p className="mt-0.5 text-slate-500 leading-normal font-medium">Tracks cognitive stamina index to notify student when revision should replace high-stress tests.</p>
                         </div>
                       </div>
 
@@ -379,13 +379,13 @@ export default function DailyJournal({
                         <div className="w-5 h-5 rounded-full bg-[#f4f7fb] text-pink-600 flex items-center justify-center font-bold font-mono text-[10px]">3</div>
                         <div>
                           <p className="font-semibold text-slate-800">Recovery Directive</p>
-                          <p className="mt-0.5 text-slate-400 leading-normal font-light">Gives solid 2-minute actionable habits to lower system stress safely.</p>
+                          <p className="mt-0.5 text-slate-500 leading-normal font-medium">Gives solid 2-minute actionable habits to lower system stress safely.</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-6 border-t border-slate-100 bg-[#F9FAFB] p-5 rounded-2xl border border-slate-200 text-[10px] font-mono text-slate-400 flex items-start gap-2 leading-normal">
-                      <Clipboard className="w-4 h-4 text-slate-300 shrink-0" />
+                    <div className="pt-6 border-t border-slate-100 bg-[#F9FAFB] p-5 rounded-2xl border border-slate-200 text-[10px] font-mono text-slate-500 flex items-start gap-2 leading-normal">
+                      <Clipboard className="w-4 h-4 text-slate-400 shrink-0" />
                       <span>Submitting a descriptive log unlocks higher-fidelity reports and stress isolates inside the trends panel.</span>
                     </div>
                   </motion.div>

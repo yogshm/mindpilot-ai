@@ -146,7 +146,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
               value={testQuote}
               onChange={(e) => setTestQuote(e.target.value)}
               placeholder="I studied 8 hours but still feel I'm behind."
-              className="w-full p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-600 outline-none transition-all placeholder:text-slate-400 font-sans bg-slate-50/40"
+              className="w-full p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-500 font-sans bg-slate-50/40"
             />
 
             {errorMsg && (

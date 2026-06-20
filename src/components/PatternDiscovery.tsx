@@ -72,7 +72,7 @@ export default function PatternDiscovery({ entries, moodLogs = [] }: PatternDisc
           </div>
           <div>
             <h3 className="text-2xl font-light font-serif text-slate-100">Emotional Pattern Diagnostics</h3>
-            <p className="text-slate-400 text-xs mt-1 max-w-lg leading-relaxed font-sans">
+            <p className="text-slate-300 text-xs mt-1 max-w-lg leading-relaxed font-sans">
               MindPilot parses your historical journal logs to pinpoint hidden correlations between sleep habits, test dates, pre-exam nervousness, and core confidence levels.
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function PatternDiscovery({ entries, moodLogs = [] }: PatternDisc
               >
                 <div>
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4 font-mono">
-                    <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400">Trend Index #{idx + 1}</span>
+                    <span className="text-[9px] uppercase font-bold tracking-widest text-slate-500">Trend Index #{idx + 1}</span>
                     <span className="px-2.5 py-0.5 rounded-full border border-indigo-100 bg-indigo-50/50 text-indigo-650 text-[9px] font-bold">
                       🔥 Confidence {ptn.confidence}%
                     </span>

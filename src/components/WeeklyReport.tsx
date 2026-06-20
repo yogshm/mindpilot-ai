@@ -180,7 +180,7 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
           </div>
           <div>
             <h3 className="text-2xl font-light font-serif text-slate-800">Weekly Wellness Report</h3>
-            <p className="text-slate-400 text-xs mt-1 max-w-lg leading-relaxed font-sans">
+            <p className="text-slate-500 text-xs mt-1 max-w-lg leading-relaxed font-sans font-medium">
               Compiling your emotional logs outlines critical stress ratios, master confidence curves, and provides diagnostic academic rest suggestions.
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
           <div className="p-12 text-center bg-transparent border border-slate-200 border-dashed rounded-[2.5rem] min-h-[300px] flex flex-col justify-center items-center space-y-4">
             <BarChart2 className="w-10 h-10 text-slate-300 animate-pulse" />
             <h4 className="text-slate-600 font-light text-sm font-sans">Wellness Trajectory Empty</h4>
-            <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+            <p className="text-xs text-slate-500 max-w-sm leading-relaxed font-medium">
               Press **Compile Report** above to trigger a holistic cognitive review scan over prior logs and generate a wellness diagnosis blueprint.
             </p>
           </div>

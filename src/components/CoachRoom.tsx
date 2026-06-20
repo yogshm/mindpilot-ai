@@ -117,7 +117,7 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
       {/* State Badge indicator */}
       <div className="p-6 rounded-[2rem] bg-white border border-slate-100 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         <div>
-          <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest block">Preparation Telemetry</span>
+          <span className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest block">Preparation Telemetry</span>
           <h4 className="text-sm font-medium text-slate-800 mt-1.5 flex items-center gap-2">
             <span>MindPilot Copilot is Synchronized</span>
             <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
@@ -126,15 +126,15 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
         
         <div className="flex gap-5 self-start md:self-auto">
           <div className="text-right font-mono">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">STRESS LOAD</span>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">STRESS LOAD</span>
             <span className="text-xs font-bold text-slate-700 mt-1 block">{defaultScores.stress}%</span>
           </div>
           <div className="text-right border-l border-slate-100 pl-5 font-mono">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">MOTIVATION</span>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">MOTIVATION</span>
             <span className="text-xs font-bold text-slate-700 mt-1 block">{defaultScores.motivation}%</span>
           </div>
           <div className="text-right border-l border-slate-100 pl-5 font-mono">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">FOCUS INDEX</span>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">FOCUS INDEX</span>
             <span className="text-xs font-bold text-slate-700 mt-1 block">{defaultScores.focus}%</span>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
           <div>
             <h4 className="text-xs font-bold tracking-widest text-[#4f46e5] uppercase mb-1.5 font-mono">Consultative Specialist</h4>
             <h3 className="text-2xl font-light text-slate-800 font-serif">Academic Companion</h3>
-            <p className="text-slate-400 text-xs mt-1 font-sans">
+            <p className="text-slate-500 text-xs mt-1 font-sans font-medium">
               Formulate real-time concerns about study fatigue, peer testing acceleration, low motivation, or parental expectations.
             </p>
           </div>
@@ -159,7 +159,7 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
               value={userQuery}
               onChange={(e) => setUserQuery(e.target.value)}
               placeholder="I feel extremely anxious about my mock-test schedule tomorrow. I haven't mastered CAT/JEE thermodynamics chapters and I'm shaking..."
-              className="w-full h-32 p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-600 leading-relaxed outline-none resize-none transition-all placeholder:text-slate-400 bg-slate-50/50"
+              className="w-full h-32 p-4 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm text-slate-600 leading-relaxed outline-none resize-none transition-all placeholder:text-slate-550 bg-slate-50/50"
             />
 
             {errorMsg && (
@@ -190,7 +190,7 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
           </div>
 
           <div className="p-5 bg-[#F9FAFB] border border-slate-100 rounded-2xl space-y-3">
-            <h5 className="text-[10px] font-bold tracking-widest uppercase text-slate-400 font-mono">Suggested Inquiries</h5>
+            <h5 className="text-[10px] font-bold tracking-widest uppercase text-slate-500 font-mono">Suggested Inquiries</h5>
             <div className="space-y-2.5 text-xs text-indigo-600">
               <button
                 onClick={() => setUserQuery("Organic chemistry is taking too long study-wise, and I feel super tired. How do I cope?")}
@@ -244,14 +244,14 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
 
                 <div className="space-y-6">
                   <div>
-                    <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono mb-2">Empathetic Analysis</h5>
+                    <h5 className="text-[9px] font-bold text-slate-500 uppercase tracking-widest font-mono mb-2">Empathetic Analysis</h5>
                     <p className="text-slate-800 text-lg leading-snug font-serif italic pl-1 border-l-2 border-indigo-500/30">
                       "{coachResponse.advice}"
                     </p>
                   </div>
 
                   <div className="pt-6 border-t border-slate-100">
-                    <h5 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono mb-4">Strategic Correction Plan</h5>
+                    <h5 className="text-[9px] font-bold text-slate-500 uppercase tracking-widest font-mono mb-4">Strategic Correction Plan</h5>
                     <div className="space-y-3 font-sans">
                       {coachResponse.plan.map((step, idx) => (
                         <div key={idx} className="flex items-start gap-3 text-slate-600 leading-relaxed font-light text-xs">
@@ -284,7 +284,7 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
               >
                 <Award className="w-10 h-10 text-slate-300 mb-4" />
                 <h3 className="text-slate-500 font-light text-sm font-sans">Coping Diagnostics Panel</h3>
-                <p className="text-xs text-slate-400 mt-2 max-w-xs font-sans leading-relaxed">
+                <p className="text-xs text-slate-500 mt-2 max-w-xs font-sans leading-relaxed font-medium">
                   Enter a state query or backlog feeling in the companion terminal. The coach will compile a structural 3-step coping action instantly.
                 </p>
               </motion.div>

@@ -210,7 +210,7 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
           </div>
           <div>
             <h3 className="text-2xl font-light font-serif text-slate-800">Voice-to-Helix Journaling</h3>
-            <p className="text-slate-400 text-xs mt-1 max-w-lg leading-relaxed font-sans">
+            <p className="text-slate-500 text-xs mt-1 max-w-lg leading-relaxed font-sans font-medium">
               Speak freely about backlog anxious feelings, parent pressure details, and mock targets. Gemini decodes oral narratives into cognitive telemetry instantly.
             </p>
           </div>
@@ -242,7 +242,7 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
         <div className="md:col-span-7 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm space-y-6">
           <div>
             <h4 className="text-xs font-bold tracking-widest text-[#4f46e5] uppercase mb-1.5 font-mono">Live Vocal Slate</h4>
-            <span className="text-xs text-slate-400">Speak into your mic or edit transcription outcomes in real time.</span>
+            <span className="text-xs text-slate-500 font-medium">Speak into your mic or edit transcription outcomes in real time.</span>
           </div>
 
           {/* Equalizer animation when recording */}
@@ -337,11 +337,11 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
                 {/* Score Meters */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 font-mono">
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-widest font-bold">STRESS DETECTED</span>
+                    <span className="text-[9px] text-slate-500 block uppercase tracking-widest font-bold">STRESS DETECTED</span>
                     <span className="text-xl font-light text-slate-700 block mt-1">{analysisResult.scores.stress}%</span>
                   </div>
                   <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 font-mono">
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-widest font-bold">CONFIDENCE GAP</span>
+                    <span className="text-[9px] text-slate-500 block uppercase tracking-widest font-bold">CONFIDENCE GAP</span>
                     <span className="text-xl font-light text-slate-700 block mt-1">{analysisResult.scores.confidence}%</span>
                   </div>
                 </div>
@@ -349,12 +349,12 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
                 {/* Core diagnostic insights */}
                 <div className="space-y-3.5 text-xs">
                   <div>
-                    <h5 className="text-[10px] uppercase font-mono text-slate-400 tracking-wider mb-1 font-bold">Primary Concern:</h5>
+                    <h5 className="text-[10px] uppercase font-mono text-slate-500 tracking-wider mb-1 font-bold">Primary Concern:</h5>
                     <p className="text-slate-650 font-sans leading-relaxed">{analysisResult.cognitiveReconstruction.triggerDetected}</p>
                   </div>
 
                   <div>
-                    <h5 className="text-[10px] uppercase font-mono text-slate-400 tracking-wider mb-1 font-bold">Empathetic Wisdom:</h5>
+                    <h5 className="text-[10px] uppercase font-mono text-slate-500 tracking-wider mb-1 font-bold">Empathetic Wisdom:</h5>
                     <p className="text-slate-650 italic font-serif leading-relaxed text-indigo-950">"{analysisResult.counselorAdvice}"</p>
                   </div>
 
@@ -368,7 +368,7 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
               <div className="min-h-[360px] border border-dashed border-slate-200 rounded-[2.5rem] flex flex-col justify-center items-center p-8 text-center bg-transparent">
                 <FileText className="w-10 h-10 text-slate-300 mb-3 animate-pulse" />
                 <h4 className="text-slate-500 font-light text-sm font-sans">Insights Sandbox Empty</h4>
-                <p className="text-xs text-slate-400 max-w-xs mt-2 leading-relaxed">
+                <p className="text-xs text-slate-500 max-w-xs mt-2 leading-relaxed font-medium">
                   Press **Transmit to Gemini** after talking. Oral inputs will generate interactive telemetry stats, custom scoring vectors, and recovery guidelines.
                 </p>
               </div>
@@ -386,7 +386,7 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-slate-800">Your Vocal Archives ({historicalVoices.length})</h4>
-              <p className="text-[11px] text-slate-400">Review and reload your previous voice journaling notes and AI telemetry insights.</p>
+              <p className="text-[11px] text-slate-500 font-medium">Review and reload your previous voice journaling notes and AI telemetry insights.</p>
             </div>
           </div>
 
@@ -412,12 +412,12 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
                 {item.insights?.scores && (
                   <div className="flex items-center gap-3 pt-3 border-t border-slate-200/50 w-full text-center">
                     <div className="flex-1">
-                      <span className="text-[8px] font-mono text-slate-400 block uppercase">STRESS</span>
+                      <span className="text-[8px] font-mono text-slate-500 block uppercase font-bold">STRESS</span>
                       <span className="text-xs font-bold text-slate-700 font-mono">{item.insights.scores.stress}%</span>
                     </div>
                     <div className="w-px h-6 bg-slate-200" />
                     <div className="flex-1">
-                      <span className="text-[8px] font-mono text-slate-400 block uppercase">CONFIDENCE</span>
+                      <span className="text-[8px] font-mono text-slate-500 block uppercase font-bold">CONFIDENCE</span>
                       <span className="text-xs font-bold text-slate-700 font-mono">{item.insights.scores.confidence}%</span>
                     </div>
                   </div>

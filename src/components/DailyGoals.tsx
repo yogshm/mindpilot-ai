@@ -217,14 +217,14 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
           <div className="md:col-span-7 space-y-3">
             <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-indigo-400">Tactical Focus Engine</span>
             <h3 className="text-3xl font-light font-serif text-slate-100">Daily Study & Wellness Slate</h3>
-            <p className="text-xs text-slate-400 font-sans leading-relaxed max-w-md">
+            <p className="text-xs text-slate-300 font-sans leading-relaxed max-w-md">
               Synchronize core concept preparation with deep biological wind-down locks. Tracking wellness daily keeps study stamina high.
             </p>
           </div>
           
           <div className="md:col-span-5 flex items-center justify-center md:justify-end gap-6 border-t md:border-t-0 md:border-l border-slate-800 pt-6 md:pt-0 md:pl-6">
             <div className="text-center md:text-right space-y-1">
-              <span className="text-[10px] uppercase font-bold tracking-widest font-mono text-slate-400 block">Today's Ratio</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest font-mono text-slate-300 block">Today's Ratio</span>
               <span className="text-3xl font-light text-slate-100 font-serif">
                 {completedCount} <span className="text-sm text-slate-500 font-sans">/</span> {totalCount} Completed
               </span>
@@ -267,11 +267,11 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
         <div className="mt-6 pt-4 border-t border-slate-800 grid grid-cols-2 gap-4 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-indigo-400" />
-            <span className="text-slate-400">Study: <strong className="text-slate-200">{studyCompleted}/{studyGoals.length}</strong></span>
+            <span className="text-slate-300">Study: <strong className="text-slate-200">{studyCompleted}/{studyGoals.length}</strong></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400" />
-            <span className="text-slate-400">Wellness: <strong className="text-slate-200">{wellnessCompleted}/{wellnessGoals.length}</strong></span>
+            <span className="text-slate-300">Wellness: <strong className="text-slate-200">{wellnessCompleted}/{wellnessGoals.length}</strong></span>
           </div>
         </div>
       </div>
@@ -281,14 +281,14 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
         <button
           onClick={() => setActiveSubSection("goals")}
           className={`pb-3 font-mono text-[10px] uppercase font-bold tracking-widest relative cursor-pointer
-            ${activeSubSection === "goals" ? "text-indigo-600 border-b-2 border-indigo-600 font-extrabold" : "text-slate-400 hover:text-slate-700"}`}
+            ${activeSubSection === "goals" ? "text-indigo-600 border-b-2 border-indigo-600 font-extrabold" : "text-slate-500 hover:text-slate-700"}`}
         >
           📝 Goal Slate Checklist
         </button>
         <button
           onClick={() => setActiveSubSection("alerts")}
           className={`pb-3 font-mono text-[10px] uppercase font-bold tracking-widest relative cursor-pointer
-            ${activeSubSection === "alerts" ? "text-indigo-600 border-b-2 border-indigo-600 font-extrabold" : "text-slate-400 hover:text-slate-700"}`}
+            ${activeSubSection === "alerts" ? "text-indigo-600 border-b-2 border-indigo-600 font-extrabold" : "text-slate-500 hover:text-slate-700"}`}
         >
           🔔 AI Journal Reminders Hub
         </button>
@@ -354,7 +354,7 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-500 block flex items-center gap-1">
                       <span>Target Value / Metric</span>
-                      <span className="text-[10px] text-slate-400 font-normal">(Optional)</span>
+                      <span className="text-[10px] text-slate-500 font-medium">(Optional)</span>
                     </label>
                     <input 
                       type="text"
@@ -385,8 +385,8 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
               {/* suggested template goals */}
               <div className="p-8 rounded-[2rem] bg-white border border-slate-100 shadow-sm space-y-4">
                 <div>
-                  <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase font-mono">Instant Suggestions</h4>
-                  <p className="text-[11px] text-slate-400 font-sans mt-0.5">Quickly select clinically recommended high-yield prep activities.</p>
+                  <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono">Instant Suggestions</h4>
+                  <p className="text-[11px] text-slate-500 font-sans font-medium mt-0.5">Quickly select clinically recommended high-yield prep activities.</p>
                 </div>
                 
                 <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
@@ -507,12 +507,12 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                 {/* Clear footer controls */}
                 {goals.length > 0 && (
                   <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-xs mt-6">
-                    <span className="text-slate-400 font-mono">
+                    <span className="text-slate-500 font-mono font-medium">
                       {completedCount} goal{completedCount !== 1 && "s"} completed today
                     </span>
                     <button
                       onClick={clearAllGoals}
-                      className="text-slate-400 hover:text-red-500 font-mono tracking-wide text-[10px] uppercase font-bold flex items-center gap-1 cursor-pointer"
+                      className="text-slate-500 hover:text-red-500 font-mono tracking-wide text-[10px] uppercase font-bold flex items-center gap-1 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Reset Goal Slate</span>
@@ -537,7 +537,7 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
               </div>
               <div>
                 <h4 className="text-md font-semibold text-slate-800">Browser Alarms Configuration</h4>
-                <p className="text-xs text-slate-400 font-sans">Automated reminders to prompt diary syncing.</p>
+                <p className="text-xs text-slate-500 font-sans font-medium">Automated reminders to prompt diary syncing.</p>
               </div>
             </div>
 

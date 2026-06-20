@@ -29,60 +29,70 @@ service cloud.firestore {
 
     // 2. Users Collection Rules
     match /users/{userId} {
-      allow read, write: if isSignedIn() && isOwner(userId);
+      allow read, delete: if isSignedIn() && isOwner(userId);
+      allow create, update: if isSignedIn() && isOwner(userId);
     }
 
     // 3. Journals Collection Rules
     match /journals/{journalId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(journalId);
     }
 
     match /journal_entries/{journalId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(journalId);
     }
 
     // 4. Mood Logs Collection Rules
     match /mood_logs/{logId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(logId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(logId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(logId);
     }
 
     // 5. Wellness Reports Collection Rules
     match /wellness_reports/{reportId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(reportId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(reportId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(reportId);
     }
 
     // 6. Burnout Assessments Collection Rules
     match /burnout_assessments/{assessmentId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(assessmentId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(assessmentId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(assessmentId);
     }
 
     // 7. Panic Sessions Collection Rules
     match /panic_sessions/{sessionId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(sessionId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(sessionId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(sessionId);
     }
 
     // 8. Future Letters Collection Rules
     match /future_letters/{letterId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(letterId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(letterId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(letterId);
     }
 
     // 9. Voice Journals Collection Rules
     match /voice_journals/{voiceId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(voiceId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(voiceId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(voiceId);
     }
 
     // 10. Goals Collection Rules
     match /goals/{goalId} {
       allow read, delete: if isSignedIn() && isDocOwner();
-      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(goalId);
+      allow create: if isSignedIn() && isNewDocOwner() && isValidId(goalId);
+      allow update: if isSignedIn() && isDocOwner() && isNewDocOwner() && isValidId(goalId);
     }
   }
 }

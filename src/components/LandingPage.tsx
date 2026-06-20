@@ -74,7 +74,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <h3 className="text-3xl font-light text-slate-800 font-serif">
               Specifically Crafted for Competitive Preparation
             </h3>
-            <p className="mt-4 text-slate-400 text-sm leading-relaxed">
+            <p className="mt-4 text-slate-500 font-medium text-sm leading-relaxed">
               Unlike generic mood logs, MindPilot AI translates daily preparation stress into actionable cognitive recovery directives.
             </p>
           </div>
@@ -168,9 +168,9 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-50 border-t border-slate-100 py-16 text-center text-[10px] font-mono text-slate-400 tracking-widest uppercase relative z-10">
+      <footer className="bg-slate-50 border-t border-slate-100 py-16 text-center text-[10px] font-mono text-slate-550 tracking-widest uppercase relative z-10">
         <p>© 2026 MindPilot AI Companion. Dedicated to Student Exam Wellness.</p>
-        <p className="mt-2 text-slate-400">All student journaling history is persisted securely inside local offline memory.</p>
+        <p className="mt-2 text-slate-550">All student journaling history is persisted securely inside local offline memory.</p>
       </footer>
     </div>
   );

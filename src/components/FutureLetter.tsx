@@ -90,7 +90,7 @@ export default function FutureLetter() {
           </div>
           <div>
             <h3 className="text-2xl font-light font-serif text-slate-800">Future Self Correspondence</h3>
-            <p className="text-slate-400 text-xs mt-1 max-w-lg leading-relaxed font-sans">
+            <p className="text-slate-500 text-xs mt-1 max-w-lg leading-relaxed font-sans font-medium">
               Request a supportive and emotionally reassuring letter sent back from your future self after successfully passing and ranking on your targeted competitive exams.
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function FutureLetter() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="exam-select-opt" className="block text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest mb-1.5 animate-pulse">
+              <label htmlFor="exam-select-opt" className="block text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest mb-1.5">
                 Your Dream Goal / Exam Target
               </label>
               <select
@@ -124,7 +124,7 @@ export default function FutureLetter() {
             </div>
 
             <div>
-              <label htmlFor="timeline-select" className="block text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest mb-1.5">
+              <label htmlFor="timeline-select" className="block text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest mb-1.5">
                 Timeline Gap of Dispatch
               </label>
               <select
@@ -167,7 +167,7 @@ export default function FutureLetter() {
           {/* Historical archived letters drafts */}
           {historicalLetters.length > 0 && (
             <div className="pt-6 border-t border-slate-100">
-              <h5 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-400 flex items-center gap-1.5 mb-3">
+              <h5 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 flex items-center gap-1.5 mb-3">
                 <History className="w-3.5 h-3.5 text-pink-500" />
                 <span>Archive Letters</span>
               </h5>
@@ -183,7 +183,7 @@ export default function FutureLetter() {
                     className="w-full text-left p-3 rounded-xl bg-slate-50 hover:bg-pink-50/20 border border-slate-100 hover:border-pink-100 transition-all text-xs font-sans text-slate-650 flex items-center justify-between cursor-pointer"
                   >
                     <span className="truncate max-w-[150px] font-medium">{ltr.targetExam} Success</span>
-                    <span className="text-[9px] font-mono font-bold text-slate-400">
+                    <span className="text-[9px] font-mono font-bold text-slate-500">
                       {new Date(ltr.createdAt).toLocaleDateString()}
                     </span>
                   </button>
@@ -226,7 +226,7 @@ export default function FutureLetter() {
                   <Mail className="w-8 h-8 text-slate-300" />
                 </div>
                 <h4 className="text-slate-500 font-light text-sm font-sans">Correspondence Seal Intact</h4>
-                <p className="text-xs text-slate-400 max-w-xs mt-2 leading-relaxed font-sans">
+                <p className="text-xs text-slate-500 max-w-xs mt-2 leading-relaxed font-sans font-medium">
                   Summon a draft using parameters on the left. Frame positive goals, revision timelines, and deep success affirmations inside an artistic vintage parchment card instantly.
                 </p>
               </div>

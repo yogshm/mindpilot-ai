@@ -162,7 +162,7 @@ export default function PanicMode() {
             {/* Box Breathing Visualizer Panel */}
             <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm md:col-span-6 flex flex-col items-center justify-center text-center space-y-6">
               <div>
-                <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest block">Respiratory Pacer</span>
+                <span className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest block">Respiratory Pacer</span>
                 <h4 className="text-lg font-light text-slate-800 font-serif mt-1">{panicIntervention.breathingGuide.title}</h4>
               </div>
 
@@ -180,7 +180,7 @@ export default function PanicMode() {
                 
                 <div className="absolute w-36 h-36 rounded-full bg-white border border-slate-100 shadow-lg flex flex-col items-center justify-center z-10 p-3">
                   <Wind className="w-6 h-6 text-indigo-500 mb-1" />
-                  <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold mb-0.5">
+                  <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold mb-0.5">
                     {secondsRemaining}s
                   </span>
                   <span className="text-xs font-semibold text-slate-800 transition-all uppercase tracking-wider font-mono">
@@ -224,7 +224,7 @@ export default function PanicMode() {
               <div className="p-8 rounded-[2.5rem] bg-slate-900 text-white shadow-md relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/10 rounded-full filter blur-xl pointer-events-none" />
                 <div className="flex justify-between items-center mb-2">
-                  <h5 className="text-[9px] font-mono uppercase text-slate-400 tracking-widest block font-bold">Academic Reassurance</h5>
+                  <h5 className="text-[9px] font-mono uppercase text-slate-300 tracking-widest block font-bold">Academic Reassurance</h5>
                   <button
                     onClick={() => speakReassurance(panicIntervention.shortTermMessage)}
                     className="p-1 px-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5 duration-100"
@@ -255,7 +255,7 @@ export default function PanicMode() {
 
               {/* Restorative Affirmations Cards */}
               <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm">
-                <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-4 font-mono">Cognitive Assertions</h4>
+                <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-4 font-mono">Cognitive Assertions</h4>
                 <div className="grid grid-cols-1 gap-2.5">
                   {panicIntervention.affirmations.map((affirmation, i) => (
                     <div key={i} className="text-xs p-4 rounded-2xl bg-pink-50/20 border border-pink-100/30 text-slate-600 italic font-serif leading-relaxed">

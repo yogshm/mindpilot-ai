@@ -90,7 +90,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
     <div id="trends-dashboard-view" className="space-y-8 animate-fadeIn">
       <div className="space-y-2">
         <h3 className="text-2xl font-light font-serif text-slate-800">Telemetry & Preparation Trends</h3>
-        <p className="text-slate-400 text-xs font-sans">
+        <p className="text-slate-500 text-xs font-sans font-medium">
           A modular view of your exam-wellness progress index indicators mapped chronologically over prior preparation logs.
         </p>
       </div>
@@ -99,7 +99,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
         <div className="p-12 text-center bg-transparent border border-slate-200 border-dashed rounded-[2.5rem] min-h-[400px] flex flex-col justify-center items-center space-y-4">
           <Activity className="w-10 h-10 text-slate-300 animate-pulse" />
           <h4 className="text-slate-600 font-light text-sm font-sans">Awaiting Metric Accumulations</h4>
-          <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+          <p className="text-xs text-slate-500 max-w-sm leading-relaxed font-medium">
             Please log at least 2 daily entries in the Daily Journal panel to start compiling linear emotional trends, stress fluctuations, and preparation maps.
           </p>
         </div>
@@ -110,8 +110,8 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
           <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm lg:col-span-8 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase font-mono">Pacing Chronology Index</h4>
-                <p className="text-slate-400 text-xs mt-1">Correlation of daily subjective stress, mental focus stability, and confidence.</p>
+                <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono">Pacing Chronology Index</h4>
+                <p className="text-slate-500 text-xs mt-1 font-medium">Correlation of daily subjective stress, mental focus stability, and confidence.</p>
               </div>
               <div className="flex items-center gap-1.5 text-[9px] uppercase font-mono bg-slate-100/80 px-3.5 py-1.5 rounded-full text-slate-500 font-bold border border-slate-200">
                 <TrendingUp className="w-3 h-3 text-[#4f46e5]" />
@@ -150,7 +150,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
             <div>
               <h4 className="text-xs font-bold tracking-widest text-[#4f46e5] uppercase font-mono">Active Contrast</h4>
               <h3 className="text-md text-slate-700 italic font-serif mt-1">Today vs. Historical Ideal</h3>
-              <p className="text-slate-400 text-xs mt-1">Direct map of your newest logged parameters versus overall study norms.</p>
+              <p className="text-slate-500 text-xs mt-1 font-medium">Direct map of your newest logged parameters versus overall study norms.</p>
             </div>
 
             <div className="w-full h-64 flex items-center justify-center font-mono text-[9px]">
@@ -183,32 +183,32 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
 
       {/* Numerical Metrics Summary Block Grid */}
       <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm">
-        <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase font-mono mb-6">Historical Telemetry Overview</h4>
+        <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono mb-6">Historical Telemetry Overview</h4>
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
           <div className="space-y-1">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Avg Prep Stress</span>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Avg Prep Stress</span>
             <span className="text-3xl font-light text-slate-800 font-sans block mt-1">{averages.stress}%</span>
             <p className="text-[9px] text-red-400 font-mono">Deflection: ±12%</p>
           </div>
           <div className="space-y-1 border-l border-slate-100 pl-4 md:pl-6">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Avg Motivation</span>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Avg Motivation</span>
             <span className="text-3xl font-light text-slate-800 font-sans block mt-1">{averages.motivation}%</span>
             <p className="text-[9px] text-emerald-500 font-mono">Deflection: ±9%</p>
           </div>
           <div className="space-y-1 border-l border-slate-100 pl-4 md:pl-6">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Avg Focus Stability</span>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Avg Focus Stability</span>
             <span className="text-3xl font-light text-slate-800 font-sans block mt-1">{averages.focus}%</span>
             <p className="text-[9px] text-indigo-500 font-mono">Optimal logging active</p>
           </div>
           <div className="space-y-1 border-l border-slate-100 pl-4 md:pl-6">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Avg Prep Confidence</span>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Avg Prep Confidence</span>
             <span className="text-3xl font-light text-slate-800 font-sans block mt-1">{averages.confidence}%</span>
-            <p className="text-[9px] text-slate-400 font-mono">Target: &gt;70%</p>
+            <p className="text-[9px] text-slate-500 font-mono font-medium">Target: &gt;70%</p>
           </div>
           <div className="space-y-1 border-l border-slate-100 pl-4 md:pl-6 col-span-2 lg:col-span-1">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Energy Index</span>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Energy Index</span>
             <span className="text-3xl font-light text-slate-800 font-sans block mt-1">{averages.energy || 50}%</span>
-            <p className="text-[9px] text-slate-400 font-mono">Rest indicators synchronized</p>
+            <p className="text-[9px] text-slate-500 font-mono font-medium">Rest indicators synchronized</p>
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
             <span>Telemetry Diagnostic</span>
           </div>
           <h4 className="text-lg font-serif text-slate-800 font-light">Burnout Risk Predictor</h4>
-          <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
+          <p className="text-xs text-slate-500 max-w-lg leading-relaxed font-medium">
             Let Gemini analyze your motivation levels, confidence shifts, study workloads, and stress vectors to determine if you are entering academic exhaustion.
           </p>
         </div>
@@ -247,7 +247,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 font-mono">
             <span className="text-[9px] text-[#4f46e5] uppercase font-bold tracking-widest">Prediction Outcome Matrix</span>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-slate-400">Exhaustion Risk Index:</span>
+              <span className="text-[10px] text-slate-500 font-medium">Exhaustion Risk Index:</span>
               <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold border uppercase tracking-wider
                 ${burnoutResult.riskLevel === "Low" ? "bg-emerald-50 border-emerald-100 text-emerald-600" : ""}
                 ${burnoutResult.riskLevel === "Medium" ? "bg-amber-50 border-amber-100 text-amber-600" : ""}
@@ -260,7 +260,7 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start text-xs font-sans">
             <div className="md:col-span-6 space-y-2">
-              <h5 className="text-[10px] uppercase font-mono tracking-widest text-slate-400 font-bold">Risk Assessment Analysis</h5>
+              <h5 className="text-[10px] uppercase font-mono tracking-widest text-slate-500 font-bold">Risk Assessment Analysis</h5>
               <p className="text-slate-650 leading-relaxed font-light">{burnoutResult.explanation}</p>
             </div>
             <div className="md:col-span-6 space-y-2 bg-indigo-50/10 p-5 rounded-2xl border border-indigo-150/30">
