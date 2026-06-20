@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { JournalEntry, MentalScores } from "../types";
-import { Compass, Sparkles, Send, Award, Smile, BookOpen, AlertCircle, RefreshCw, Zap } from "lucide-react";
+import { Compass, Sparkles, Send, Award, Smile, BookOpen, AlertCircle, RefreshCw, Zap, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface CoachRoomProps {
@@ -19,6 +19,46 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [coachResponse, setCoachResponse] = useState<CoachResponse | null>(null);
+  const [playingTTS, setPlayingTTS] = useState(false);
+
+  const triggerSpeechSynthesis = async (speechText: string) => {
+    if (playingTTS) {
+      window.speechSynthesis.cancel();
+      setPlayingTTS(false);
+      return;
+    }
+
+    setPlayingTTS(true);
+    try {
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: speechText })
+      });
+      const data = await response.json();
+      if (data && !data.fallback) {
+        const audioRes = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: speechText })
+        });
+        const blob = await audioRes.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onended = () => setPlayingTTS(false);
+        audio.play();
+      } else {
+        const utterance = new SpeechSynthesisUtterance(speechText);
+        utterance.onend = () => setPlayingTTS(false);
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (err) {
+      console.error(err);
+      const utterance = new SpeechSynthesisUtterance(speechText);
+      utterance.onend = () => setPlayingTTS(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const defaultScores: MentalScores = latestEntry?.scores || {
     stress: 30,
@@ -185,11 +225,21 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
                 exit={{ opacity: 0, scale: 0.98 }}
                 className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm space-y-8"
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                    <Compass className="w-4 h-4" />
-                  </span>
-                  <p className="text-xs font-bold tracking-widest uppercase text-slate-500 font-mono">Advisor Custom Directive</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                      <Compass className="w-4 h-4" />
+                    </span>
+                    <p className="text-xs font-bold tracking-widest uppercase text-slate-500 font-mono">Advisor Custom Directive</p>
+                  </div>
+
+                  <button
+                    onClick={() => triggerSpeechSynthesis(coachResponse.advice)}
+                    className="p-2 bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100 text-indigo-650 rounded-full cursor-pointer flex items-center justify-center"
+                    title="Audio guidance narration"
+                  >
+                    <Volume2 className={`w-4 h-4 ${playingTTS ? 'animate-bounce text-indigo-650' : 'text-slate-500'}`} />
+                  </button>
                 </div>
 
                 <div className="space-y-6">

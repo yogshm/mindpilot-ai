@@ -1,7 +1,6 @@
 import React from "react";
 import { JournalEntry, MentalScores } from "../types";
-import { AlertCircle, Flame, Calendar, BookOpen, Quote, ShieldAlert, Sparkles, Smile, ArrowUpRight, ArrowBigRight } from "lucide-react";
-import { motion } from "motion/react";
+import { AlertCircle, Flame, BookOpen } from "lucide-react";
 
 interface DashboardOverviewProps {
   entries: JournalEntry[];
@@ -60,379 +59,303 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
   const recentlyDetectedTriggers = latestEntry?.analysis?.stressTriggers || [];
 
   return (
-    <div id="dashboard-overview" className="space-y-8 animate-fadeIn">
-      {/* Editorial Welcome Header Section */}
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pb-6 border-b border-slate-100">
+    <div id="dashboard-overview" className="space-y-4 animate-fadeIn text-slate-800">
+      {/* Editorial Welcome Header Section - Compact */}
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3.5 border-b border-slate-100">
         <div>
-          <h1 className="text-xs font-bold tracking-[0.15em] text-indigo-500 uppercase mb-1.5 font-mono">MindPilot AI Companion</h1>
-          <h2 className="text-3xl font-light text-slate-800 font-serif">
+          <h1 className="text-[10px] font-bold tracking-[0.15em] text-indigo-500 uppercase font-mono">MindPilot AI Companion</h1>
+          <h2 className="text-xl font-light text-slate-850 font-serif">
             Aspirant <span className="font-semibold italic text-slate-900">Workspace</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1 font-sans">
-            Strategic Wellness Journey • <span className="text-indigo-600 font-medium">Active Copilot Enabled</span>
-          </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={() => onNavigateTab("panic")}
-            className="px-6 py-2.5 bg-red-50 text-red-600 rounded-full text-xs font-semibold border border-red-100 hover:bg-red-150 transition-colors uppercase tracking-widest font-mono"
+            className="px-4 py-1.5 bg-red-50 text-red-650 rounded-full text-[10px] font-bold border border-red-100 hover:bg-red-100/70 transition-colors uppercase tracking-wider font-mono cursor-pointer"
           >
             I need help now
           </button>
           <button
             id="tab-btn-journal"
             onClick={() => onNavigateTab("journal")}
-            className="px-6 py-2.5 bg-slate-900 text-white hover:bg-slate-800 rounded-full text-xs font-semibold hover:shadow-lg hover:shadow-indigo-100 transition-all uppercase tracking-widest font-mono"
+            className="px-4 py-1.5 bg-slate-900 text-white hover:bg-slate-800 rounded-full text-[10px] font-bold hover:shadow-md transition-all uppercase tracking-wider font-mono cursor-pointer"
           >
             Daily Sync
           </button>
         </div>
       </header>
 
-      {/* Wellness Dashboard Core Metrics Grid with rounded-[2rem] */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+      {/* Wellness Dashboard Core Metrics Row - Redesigned ultra-compact horizontal strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Metric 1 - Stress Score */}
-        <div id="metric-card-stress" className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest">Stress score</span>
-              <span className={`w-2.5 h-2.5 rounded-full ${currentScores.stress > 70 ? 'bg-red-500' : currentScores.stress > 48 ? 'bg-orange-400' : 'bg-emerald-400 animate-pulse'}`} />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-light text-slate-800">
-                {latestEntry ? currentScores.stress : '──'}
-              </span>
-              {latestEntry && (
-                <span className={`text-xs ${currentScores.stress > 50 ? 'text-red-500' : 'text-emerald-500'}`}>
-                  {currentScores.stress > 50 ? '↑ Load' : '↓ Safe'}
-                </span>
-              )}
-            </div>
+        <div id="metric-card-stress" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">STRESS SCALE</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${currentScores.stress > 70 ? 'bg-red-500' : currentScores.stress > 48 ? 'bg-orange-400' : 'bg-emerald-400 animate-pulse'}`} />
           </div>
-          <div className="mt-4">
-            <div className="w-full bg-slate-50 h-1 rounded-full overflow-hidden">
-              <div 
-                style={{ width: latestEntry ? `${currentScores.stress}%` : '0%' }}
-                className={`h-full rounded-full transition-all duration-500 ${currentScores.stress > 70 ? 'bg-red-500' : currentScores.stress > 48 ? 'bg-orange-400' : 'bg-emerald-400'}`}
-              />
-            </div>
-            <p className="mt-2 text-[9px] text-slate-400 uppercase tracking-tight font-mono">Fatigue accumulation status</p>
+          <div className="flex items-baseline justify-between mt-1">
+            <span className="text-2xl font-serif text-slate-850">
+              {latestEntry ? currentScores.stress : '──'}
+            </span>
+            {latestEntry && (
+              <span className={`text-[8px] font-mono font-bold px-1 py-0.2 rounded ${currentScores.stress > 60 ? 'bg-red-50 text-red-650' : 'bg-emerald-50 text-emerald-600'}`}>
+                {currentScores.stress > 60 ? 'LOAD' : 'SAFE'}
+              </span>
+            )}
           </div>
         </div>
 
         {/* Metric 2 - Motivation Score */}
-        <div id="metric-card-motivation" className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest">Motivation</span>
-              <span className="text-indigo-400 text-xs font-mono">★</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-light text-slate-800">
-                {latestEntry ? `${currentScores.motivation}%` : '──'}
-              </span>
-            </div>
+        <div id="metric-card-motivation" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">MOTIVATION</span>
+            <span className="text-indigo-400 text-[10px] font-mono">★</span>
           </div>
-          <div className="mt-4">
-            <div className="w-full bg-slate-50 h-1 text-slate-800 rounded-full overflow-hidden">
-              <div 
-                style={{ width: latestEntry ? `${currentScores.motivation}%` : '0%' }}
-                className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-              />
-            </div>
-            <p className="mt-2 text-[9px] text-slate-400 uppercase tracking-tight font-mono">Academic drive momentum</p>
+          <div className="flex items-baseline justify-between mt-1">
+            <span className="text-2xl font-serif text-slate-850">
+              {latestEntry ? `${currentScores.motivation}%` : '──'}
+            </span>
+            <span className="text-[8px] font-mono text-slate-450 uppercase">DRIVE</span>
           </div>
         </div>
 
         {/* Metric 3 - Focus Score */}
-        <div id="metric-card-focus" className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest">Focus Level</span>
-              <span className="text-indigo-500 text-[10px] italic font-serif">Peak</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-light text-slate-800">
-                {latestEntry ? `${currentScores.focus}%` : '──'}
-              </span>
-            </div>
+        <div id="metric-card-focus" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">FOCUS RANGE</span>
+            <span className="text-indigo-500 text-[8px] italic font-serif">Peak</span>
           </div>
-          <div className="mt-4">
-            <div className="w-full bg-slate-50 h-1 rounded-full overflow-hidden">
-              <div 
-                style={{ width: latestEntry ? `${currentScores.focus}%` : '0%' }}
-                className="h-full bg-indigo-600 rounded-full transition-all duration-500"
-              />
-            </div>
-            <p className="mt-2 text-[9px] text-slate-400 uppercase tracking-tight font-mono">Attentiveness stability index</p>
+          <div className="flex items-baseline justify-between mt-1">
+            <span className="text-2xl font-serif text-slate-850">
+              {latestEntry ? `${currentScores.focus}%` : '──'}
+            </span>
+            <span className="text-[8px] font-mono text-slate-450 uppercase">ATTN</span>
           </div>
         </div>
 
         {/* Metric 4 - Confidence Score */}
-        <div id="metric-card-confidence" className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest">Confidence</span>
-              <span className="text-emerald-500 text-xs font-mono">▲</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-light text-slate-800">
-                {latestEntry ? `${currentScores.confidence}%` : '──'}
-              </span>
-            </div>
+        <div id="metric-card-confidence" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">CONFIDENCE</span>
+            <span className="text-emerald-500 text-[10px] font-mono">▲</span>
           </div>
-          <div className="mt-4">
-            <div className="w-full bg-slate-50 h-1 rounded-full overflow-hidden">
-              <div 
-                style={{ width: latestEntry ? `${currentScores.confidence}%` : '0%' }}
-                className="h-full bg-emerald-400 rounded-full transition-all duration-500"
-              />
-            </div>
-            <p className="mt-2 text-[9px] text-slate-400 uppercase tracking-tight font-mono">Recall capacity trust</p>
+          <div className="flex items-baseline justify-between mt-1">
+            <span className="text-2xl font-serif text-slate-850">
+              {latestEntry ? `${currentScores.confidence}%` : '──'}
+            </span>
+            <span className="text-[8px] font-mono text-slate-455 uppercase">RECALL</span>
           </div>
         </div>
 
         {/* Metric 5 - Burnout Risk level card */}
-        <div id="metric-card-burnout" className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden col-span-2 lg:col-span-1 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-widest">Burnout Risk</span>
-              <Flame className={`w-4 h-4 ${currentRisk === "High" ? "text-red-500 fill-red-100 animate-pulse" : currentRisk === "Medium" ? "text-orange-400" : "text-emerald-400"}`} />
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className={`text-3xl font-light ${currentRisk === "High" ? "text-red-600" : currentRisk === "Medium" ? "text-orange-500" : "text-emerald-600"}`}>
-                {latestEntry ? currentRisk : '──'}
-              </span>
-            </div>
+        <div id="metric-card-burnout" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20 col-span-2 lg:col-span-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">BURNOUT RISK</span>
+            <Flame className={`w-3 h-3 ${currentRisk === "High" ? "text-red-500 fill-red-100 animate-pulse" : currentRisk === "Medium" ? "text-orange-400" : "text-emerald-400"}`} />
           </div>
-          <div className="mt-4">
-            <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[9px] font-semibold uppercase tracking-wider
-              ${currentRisk === "High" ? "bg-red-50 text-red-700" : currentRisk === "Medium" ? "bg-orange-50 text-orange-700" : "bg-emerald-50 text-emerald-700"}`}
-            >
-              ● {latestEntry ? currentRisk : 'Awaiting Data'}
+          <div className="flex items-baseline justify-between mt-1">
+            <span className={`text-xl font-serif font-bold ${currentRisk === "High" ? "text-red-650 animate-pulse" : currentRisk === "Medium" ? "text-orange-500" : "text-emerald-600"}`}>
+              {latestEntry ? currentRisk : '──'}
             </span>
-            <p className="mt-2 text-[9px] text-slate-400 uppercase tracking-tight font-mono">Fatigue threshold probability</p>
+            <span className="text-[8px] font-mono text-slate-410 uppercase">PROB</span>
           </div>
         </div>
       </div>
 
-      {/* Adaptive AI Mentor Card & Discovered Triggers split with rounded-[2.5rem] */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Main Split Console Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         
-        {/* Adaptive AI Companion Card Column */}
-        <div id="mentor-companion-panel" className="bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden col-span-1 lg:col-span-7 flex flex-col justify-between">
-          {/* Background ambient decorative coin */}
-          <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/5 rounded-full pointer-events-none" />
+        {/* Left Column: Diagnostics and Triggers (col-span-7) */}
+        <div className="lg:col-span-7 flex flex-col gap-4">
           
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5">
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-70 font-mono">Diagnostic Companion</span>
+          {/* Adaptive AI Companion Card Column - Sleeker & High Contrast */}
+          <div id="mentor-companion-panel" className="bg-gradient-to-br from-[#4f46e5]/95 to-indigo-705 rounded-xl p-5 text-white shadow relative overflow-hidden flex flex-col justify-between h-[155px]">
+            <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
+            <div className="space-y-1.5">
+              <span className="text-[8px] font-bold tracking-[0.15em] uppercase opacity-80 font-mono block">DIAGNOSTIC ADVICE SUMMARY</span>
+              <p className="text-xs leading-relaxed font-serif font-light italic">
+                "{mentorMessage}"
+              </p>
             </div>
-            
-            <p className="text-lg leading-snug font-serif italic font-light">
-              "{mentorMessage}"
-            </p>
-          </div>
-
-          <div className="mt-10 pt-6 border-t border-white/10 flex items-center justify-between">
-            {latestEntry ? (
-              <span className="text-[10px] font-mono opacity-60">
-                Last synchronized: {new Date(latestEntry.date).toLocaleDateString()}
+            <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[9px] font-mono opacity-80">
+              <span>
+                {latestEntry ? `Last Sync: ${new Date(latestEntry.date).toLocaleDateString()}` : "No telemetry logs found"}
               </span>
-            ) : (
-              <span className="text-[10px] font-mono opacity-60">
-                No telemetry logs detected in storage
-              </span>
-            )}
-            <button
-              onClick={() => onNavigateTab("coach")}
-              className="text-[10px] font-bold tracking-widest text-white uppercase hover:underline flex items-center gap-1 font-mono"
-            >
-              Consult Mentor Panel →
-            </button>
-          </div>
-        </div>
-
-        {/* Recently Discovered Stress Triggers Panel */}
-        <div id="triggers-summary-panel" className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm col-span-1 lg:col-span-5 flex flex-col">
-          <div className="mb-6">
-            <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">Detected Mental Triggers</h4>
-            <p className="text-slate-400 text-xs font-sans">Active psychological blocks found across logged cycles.</p>
+              <button
+                onClick={() => onNavigateTab("coach")}
+                className="font-bold uppercase hover:underline flex items-center gap-0.5 cursor-pointer text-indigo-100 text-[10px]"
+              >
+                Inquire Coach →
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1 space-y-3 overflow-y-auto max-h-[280px]">
-            {recentlyDetectedTriggers.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 bg-slate-50/50 rounded-2xl border border-dashed border-slate-100">
-                <AlertCircle className="w-5 h-5 text-slate-300 mb-2" />
-                <p className="text-xs text-slate-400 font-medium font-sans">Isolation matrix quiet</p>
-                <p className="text-[10px] text-slate-400 mt-1">Daily journals trigger real-time mapping.</p>
+          {/* Recently Discovered Stress Triggers Panel - High Density with low max-height */}
+          <div id="triggers-summary-panel" className="bg-white rounded-xl p-4.5 border border-slate-100 shadow-sm flex flex-col h-[180px]">
+            <div className="mb-2.5 flex justify-between items-center">
+              <div>
+                <h4 className="text-[9px] font-bold tracking-wider text-slate-400 uppercase">PSYCHOLOGICAL IMPEDANCES</h4>
+                <p className="text-[10px] text-slate-400">Active stress channels flagged by Gemini.</p>
               </div>
-            ) : (
-              recentlyDetectedTriggers.map((t, idx) => (
-                <div key={idx} className="p-4 bg-[#F9FAFB] rounded-2xl flex items-center justify-between border border-slate-100">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-semibold text-slate-700">{t.trigger}</p>
-                    <p className="text-[10px] text-slate-400">{t.description}</p>
+              <span className="text-[9px] font-mono text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded font-bold">
+                {recentlyDetectedTriggers.length} Blockers
+              </span>
+            </div>
+
+            <div className="flex-1 space-y-1.5 overflow-y-auto max-h-[125px] pr-1">
+              {recentlyDetectedTriggers.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center p-3 bg-slate-50/50 rounded-lg border border-dashed border-slate-100">
+                  <span className="text-[10px] text-slate-400 font-mono">No telemetry indicators available. Try recording a journal first.</span>
+                </div>
+              ) : (
+                recentlyDetectedTriggers.map((t, idx) => (
+                  <div key={idx} className="p-2 bg-slate-50 rounded-lg flex items-center justify-between border border-slate-100/60 hover:bg-slate-100/40 transition-all">
+                    <div className="space-y-0.5 pr-4">
+                      <p className="text-xs font-semibold text-slate-700">{t.trigger}</p>
+                      <p className="text-[9px] text-slate-400 truncate max-w-[280px]">{t.description}</p>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold text-indigo-650 bg-indigo-50 px-1.5 py-0.5 rounded-md">{t.score}%</span>
                   </div>
-                  <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">{t.score}%</span>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         </div>
 
-      </div>
-
-      {/* Previous logs of daily records */}
-      <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-150 mb-6">
+        {/* Right Column: Telemetry History Logs Feed (col-span-5) - REDESIGNED FIXED MAX SCROLL */}
+        <div className="lg:col-span-5 bg-white rounded-xl p-4.5 border border-slate-100 shadow-sm flex flex-col justify-between h-[350px]">
           <div>
-            <h3 className="text-lg font-medium text-slate-800">Telemetry History Logs</h3>
-            <p className="text-slate-400 text-xs mt-1">Analytical records of previous preparation cycles.</p>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest font-mono text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 self-start lg:self-auto">
-            {filteredEntries.length === entries.length ? `${entries.length} Logs` : `Found ${filteredEntries.length} of ${entries.length} Logs`}
-          </span>
-        </div>
-
-        {entries.length > 0 && (
-          <div className="space-y-4 mb-6">
-            {/* Risk profile filters */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 items-start text-xs border-b border-dashed border-slate-100 pb-3">
-              <span className="text-[10px] font-mono uppercase font-bold tracking-widest text-slate-400 w-28 text-left shrink-0">Pacing Risk:</span>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setSelectedRisk("All")}
-                  className={`px-3 py-1 text-[10px] font-bold uppercase font-mono rounded-full border transition-all cursor-pointer
-                    ${selectedRisk === "All" 
-                      ? "bg-slate-900 border-slate-900 text-white font-semibold" 
-                      : "bg-[#F9FAFB] border-slate-200 text-slate-500 hover:text-slate-800"}`}
-                >
-                  All Risks
-                </button>
-                {(["High", "Medium", "Low"] as const).map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setSelectedRisk(r)}
-                    className={`px-3 py-1 text-[10px] font-bold uppercase font-mono rounded-full border transition-all cursor-pointer flex items-center gap-1
-                      ${selectedRisk === r 
-                        ? "bg-indigo-600 border-indigo-600 text-white font-semibold" 
-                        : "bg-[#F9FAFB] border-slate-200 text-slate-500 hover:text-slate-800"}`}
-                  >
-                    <span>{r === "High" ? "🔥 High" : r === "Medium" ? "⚡ Medium" : "🟢 Low"}</span>
-                  </button>
-                ))}
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-2.5">
+              <div>
+                <h3 className="text-[9px] font-bold tracking-wider text-slate-400 uppercase">STUDENT CHRONOLOGY</h3>
+                <p className="text-[10px] text-slate-400">Archived daily logs & telemetry records.</p>
               </div>
+              <span className="text-[9px] font-bold font-mono text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
+                {entries.length} Logs
+              </span>
             </div>
 
-            {/* Dynamic AI detected pattern filters */}
-            {dynamicPatterns.length > 0 && (
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 items-start text-xs pb-1">
-                <span className="text-[10px] font-mono uppercase font-bold tracking-widest text-slate-400 w-28 text-left shrink-0">AI Mood Label:</span>
-                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-2">
-                  <button
-                    onClick={() => setSelectedPattern("All")}
-                    className={`px-3 py-1 text-[10px] font-bold uppercase font-mono rounded-full border transition-all cursor-pointer
-                      ${selectedPattern === "All" 
-                        ? "bg-slate-900 border-slate-900 text-white font-semibold" 
-                        : "bg-[#F9FAFB] border-slate-200 text-slate-500 hover:text-slate-800"}`}
-                  >
-                    All AI Moods
-                  </button>
-                  {dynamicPatterns.map((pat) => (
+            {entries.length > 0 && (
+              <div className="space-y-1.5 mb-2 pb-2.5 border-b border-slate-50">
+                {/* Risk profile filters - Condensed */}
+                <div className="flex items-center gap-1 text-[9px]">
+                  <span className="text-[8px] font-mono uppercase text-slate-400 tracking-wider w-14 text-left shrink-0">Pacing Risk:</span>
+                  <div className="flex flex-wrap gap-1 items-center">
                     <button
-                      key={pat}
-                      onClick={() => setSelectedPattern(pat)}
-                      className={`px-3 py-1 text-[10px] font-mono rounded-full border transition-all cursor-pointer flex items-center gap-1
-                        ${selectedPattern === pat 
-                          ? "bg-indigo-600 border-indigo-600 text-white font-semibold" 
-                          : "bg-[#F9FAFB] border-slate-200 text-slate-500 hover:text-indigo-600"}`}
+                      onClick={() => setSelectedRisk("All")}
+                      className={`px-1.5 py-0.2 text-[8px] font-mono rounded border transition-all cursor-pointer
+                        ${selectedRisk === "All" 
+                          ? "bg-slate-900 border-slate-900 text-white font-bold" 
+                          : "bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-850"}`}
                     >
-                      <span>🧠 {pat}</span>
+                      All
                     </button>
-                  ))}
+                    {(["High", "Medium", "Low"] as const).map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setSelectedRisk(r)}
+                        className={`px-1.5 py-0.2 text-[8px] font-mono rounded border transition-all cursor-pointer flex items-center gap-0.5
+                          ${selectedRisk === r 
+                            ? "bg-indigo-600 border-indigo-600 text-white font-bold" 
+                            : "bg-slate-50 border-slate-200 text-slate-500 hover:text-indigo-650"}`}
+                      >
+                        {r === "High" ? "🔥 H" : r === "Medium" ? "⚡ M" : "🟢 L"}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
 
-        {entries.length === 0 ? (
-          <div className="text-center p-12 bg-slate-50 rounded-2xl border border-dashed border-slate-100">
-            <BookOpen className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-            <h4 className="text-slate-500 font-medium text-sm">Quiet Archive</h4>
-            <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
-              Your previous daily logs and emotional mappings are stored here. Begin logging entries to populate database archives.
-            </p>
-          </div>
-        ) : filteredEntries.length === 0 ? (
-          <div className="text-center p-12 bg-slate-50/50 rounded-[2rem] border border-dashed border-slate-200 min-h-[200px] flex flex-col justify-center">
-            <AlertCircle className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-slate-500 font-mono uppercase">No Matching Historical Logs</h4>
-            <p className="text-[10px] text-slate-400 mt-1 max-w-xs mx-auto">
-              No entries in the local directory match current filters. Try resetting the stress risk profile or mood label.
-            </p>
-            <button
-              onClick={() => {
-                setSelectedRisk("All");
-                setSelectedPattern("All");
-              }}
-              className="mt-4 self-center px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-[10px] uppercase font-bold tracking-wider font-mono rounded-full transition-colors cursor-pointer"
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-100 max-h-96 overflow-y-auto pr-2">
-            {filteredEntries.map((entry) => (
-              <div key={entry.id} className="py-5 first:pt-0 last:pb-0 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 group">
-                <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold text-slate-700 font-mono">
-                      {new Date(entry.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-                    </span>
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider
-                      ${entry.analysis?.burnoutRisk === "High" ? "bg-red-50 text-red-700" : entry.analysis?.burnoutRisk === "Medium" ? "bg-orange-50 text-orange-700" : "bg-emerald-50 text-emerald-700"}`}
-                    >
-                      ● Risk: {entry.analysis?.burnoutRisk || "Low"}
-                    </span>
-                    
-                    {/* Tiny badges for dynamic patterns */}
-                    <div className="hidden sm:flex flex-wrap gap-1">
-                      {entry.analysis?.detectedPatterns?.slice(0, 2).map((p, idx) => (
-                        <span key={idx} className="bg-slate-50 text-slate-500 border border-slate-100 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-md">
-                          {p}
-                        </span>
+                {/* Dynamic AI detected pattern filters - Condensed */}
+                {dynamicPatterns.length > 0 && (
+                  <div className="flex items-center gap-1 text-[9px]">
+                    <span className="text-[8px] font-mono uppercase text-slate-400 tracking-wider w-14 text-left shrink-0">Mood Tag:</span>
+                    <div className="flex flex-wrap gap-1 max-h-12 overflow-y-auto pr-1">
+                      <button
+                        onClick={() => setSelectedPattern("All")}
+                        className={`px-1.5 py-0.2 text-[8px] font-mono rounded border transition-all cursor-pointer
+                          ${selectedPattern === "All" 
+                            ? "bg-slate-900 border-slate-900 text-white font-bold" 
+                            : "bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-850"}`}
+                      >
+                        All
+                      </button>
+                      {dynamicPatterns.slice(0, 3).map((pat) => (
+                        <button
+                          key={pat}
+                          onClick={() => setSelectedPattern(pat)}
+                          className={`px-1.5 py-0.2 text-[8px] font-mono rounded border transition-all cursor-pointer
+                            ${selectedPattern === pat 
+                              ? "bg-indigo-600 border-indigo-600 text-white font-bold" 
+                              : "bg-slate-50 border-slate-200 text-slate-500 hover:text-slate-850"}`}
+                        >
+                          {pat}
+                        </button>
                       ))}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                    {entry.text}
-                  </p>
-                </div>
-                
-                <div className="flex items-center gap-6 justify-between md:justify-end">
-                  <div className="flex gap-4">
-                    <div className="text-right">
-                      <div className="text-[9px] uppercase font-bold tracking-widest font-mono text-slate-400">Stress</div>
-                      <div className="text-xs font-bold text-slate-700 font-mono mt-0.5">{entry.scores.stress}%</div>
-                    </div>
-                    <div className="text-right border-l border-slate-100 pl-4">
-                      <div className="text-[9px] uppercase font-bold tracking-widest font-mono text-slate-400">Focus</div>
-                      <div className="text-xs font-bold text-slate-700 font-mono mt-0.5">{entry.scores.focus}%</div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => onSelectEntry(entry)}
-                    className="px-4 py-2 bg-[#F9FAFB] hover:bg-slate-100 text-[10px] uppercase tracking-wider font-bold text-indigo-600 hover:text-indigo-700 rounded-full transition-colors border border-slate-100 cursor-pointer"
-                  >
-                    Details →
-                  </button>
-                </div>
+                )}
               </div>
-            ))}
+            )}
           </div>
-        )}
+
+          {entries.length === 0 ? (
+            <div className="text-center p-6 bg-slate-50 rounded-lg border border-dashed border-slate-100 flex-1 flex flex-col justify-center items-center">
+              <BookOpen className="w-5 h-5 text-slate-300 mb-1" />
+              <p className="text-[10px] text-slate-400 font-mono">Archive Empty</p>
+            </div>
+          ) : filteredEntries.length === 0 ? (
+            <div className="text-center p-4 bg-slate-50/50 rounded-lg border border-dashed border-slate-200 flex-1 flex flex-col justify-center">
+              <AlertCircle className="w-4 h-4 text-slate-300 mx-auto mb-1" />
+              <p className="text-[9px] text-slate-450 font-mono">No matching telemetry diaries.</p>
+              <button
+                onClick={() => {
+                  setSelectedRisk("All");
+                  setSelectedPattern("All");
+                }}
+                className="mt-2.5 self-center px-2 py-0.5 bg-slate-150 hover:bg-slate-200 text-[8px] font-mono font-bold uppercase rounded cursor-pointer"
+              >
+                Reset Filter
+              </button>
+            </div>
+          ) : (
+            /* SCROLLABLE FEED - FIXED MAX HEIGHT PREVENTS ENHANCED SCROLLING */
+            <div className="divide-y divide-slate-100 max-h-[175px] overflow-y-auto pr-1 flex-1">
+              {filteredEntries.map((entry) => (
+                <div key={entry.id} className="py-2 first:pt-0 last:pb-0 flex items-center justify-between gap-1.5 group">
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-1 flex-wrap">
+                      <span className="text-[10px] font-bold text-slate-700 font-mono">
+                        {new Date(entry.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </span>
+                      <span className={`inline-block px-1 py-0.2 rounded text-[7px] font-bold font-mono uppercase
+                        ${entry.analysis?.burnoutRisk === "High" ? "bg-red-50 text-red-700" : entry.analysis?.burnoutRisk === "Medium" ? "bg-orange-50 text-orange-700" : "bg-emerald-55 text-emerald-705"}`}
+                      >
+                        {entry.analysis?.burnoutRisk || "Low"}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-455 truncate">
+                      {entry.text}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 shrink-0 font-mono">
+                    <div className="text-right">
+                      <span className="text-[8px] text-slate-400 block uppercase font-bold">STRESS</span>
+                      <span className="text-[9px] font-bold text-slate-700">{entry.scores.stress}%</span>
+                    </div>
+                    <div className="w-px h-4 bg-slate-100" />
+                    <button
+                      onClick={() => onSelectEntry(entry)}
+                      className="px-2 py-0.5 bg-slate-50 hover:bg-indigo-50 border border-slate-150 text-[9px] font-bold text-indigo-650 hover:text-indigo-700 rounded transition-all uppercase cursor-pointer"
+                    >
+                      Inquire
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AlertOctagon, Heart, Music, Check, Compass, Shield, Wind, Sparkles, AlertTriangle } from "lucide-react";
+import { AlertOctagon, Heart, Music, Check, Compass, Shield, Wind, Sparkles, AlertTriangle, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PanicIntervention } from "../types";
 
@@ -7,10 +7,50 @@ export default function PanicMode() {
   const [panicIntervention, setPanicIntervention] = useState<PanicIntervention | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isActiveCycle, setIsActiveCycle] = useState(false);
+  const [speakingText, setSpeakingText] = useState(false);
 
   // Breathing timer states
   const [cyclePhase, setCyclePhase] = useState<"Inhale" | "Hold (Full)" | "Exhale" | "Hold (Empty)">("Inhale");
   const [secondsRemaining, setSecondsRemaining] = useState(4);
+
+  const speakReassurance = async (text: string) => {
+    if (speakingText) {
+      window.speechSynthesis.cancel();
+      setSpeakingText(false);
+      return;
+    }
+
+    setSpeakingText(true);
+    try {
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+      if (data && !data.fallback) {
+        const audioRes = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+        const blob = await audioRes.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onended = () => setSpeakingText(false);
+        audio.play();
+      } else {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.onend = () => setSpeakingText(false);
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (err) {
+      console.error(err);
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = () => setSpeakingText(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const triggerPanicRelief = async () => {
     setIsLoading(true);
@@ -183,7 +223,16 @@ export default function PanicMode() {
               {/* Short message bar */}
               <div className="p-8 rounded-[2.5rem] bg-slate-900 text-white shadow-md relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/10 rounded-full filter blur-xl pointer-events-none" />
-                <h5 className="text-[9px] font-mono uppercase text-slate-400 tracking-widest block font-bold mb-2">Academic Reassurance</h5>
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="text-[9px] font-mono uppercase text-slate-400 tracking-widest block font-bold">Academic Reassurance</h5>
+                  <button
+                    onClick={() => speakReassurance(panicIntervention.shortTermMessage)}
+                    className="p-1 px-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-mono font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5 duration-100"
+                  >
+                    <Volume2 className={`w-3 h-3 ${speakingText ? 'animate-bounce' : ''}`} />
+                    <span>{speakingText ? 'Silence' : 'Sooth'}</span>
+                  </button>
+                </div>
                 <p className="text-xs text-slate-300 mt-2 leading-relaxed font-light font-sans">
                   {panicIntervention.shortTermMessage}
                 </p>

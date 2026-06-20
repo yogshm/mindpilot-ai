@@ -1,80 +1,83 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 1. Global safety net: deny all by default
+    // 1. Global Safety Net: Deny all by default
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Common Global Helpers
+    // Auth Helper Functions
     function isSignedIn() {
       return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return request.auth.uid == resource.data.userId;
+    }
+
+    function isNewDocOwner() {
+      return request.auth.uid == request.resource.data.userId;
     }
 
     function isValidId(id) {
       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    function incoming() {
-      return request.resource.data;
+    // 2. Users Collection Rules
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && isOwner(userId);
     }
 
-    function existing() {
-      return resource.data;
+    // 3. Journals Collection Rules
+    match /journals/{journalId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
     }
 
-    // 2. Rules for journal entries collection
-    match /journal_entries/{entryId} {
-      // Secure list query and individual document accesses
-      allow read, get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      
-      // Strict creation verification
-      allow create: if isSignedIn() 
-                    && isValidId(entryId) 
-                    && incoming().userId == request.auth.uid
-                    && incoming().id == entryId
-                    && incoming().text is string 
-                    && incoming().text.size() <= 20000;
-                    
-      // Strict update validation mapping specific allowed mutations
-      allow update: if isSignedIn() 
-                    && isValidId(entryId)
-                    && existing().userId == request.auth.uid
-                    && incoming().userId == request.auth.uid
-                    && incoming().id == entryId
-                    && incoming().text is string 
-                    && incoming().text.size() <= 20000;
-                    
-      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    // 4. Mood Logs Collection Rules
+    match /mood_logs/{logId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(logId);
     }
 
-    // 3. Rules for daily goals collection
+    // 5. Wellness Reports Collection Rules
+    match /wellness_reports/{reportId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(reportId);
+    }
+
+    // 6. Burnout Assessments Collection Rules
+    match /burnout_assessments/{assessmentId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(assessmentId);
+    }
+
+    // 7. Panic Sessions Collection Rules
+    match /panic_sessions/{sessionId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(sessionId);
+    }
+
+    // 8. Future Letters Collection Rules
+    match /future_letters/{letterId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(letterId);
+    }
+
+    // 9. Voice Journals Collection Rules
+    match /voice_journals/{voiceId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(voiceId);
+    }
+
+    // 10. Goals Collection Rules
     match /goals/{goalId} {
-      // Secure list query and individual document accesses
-      allow read, get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      
-      // Strict creation verification
-      allow create: if isSignedIn() 
-                    && isValidId(goalId) 
-                    && incoming().userId == request.auth.uid
-                    && incoming().id == goalId
-                    && incoming().text is string 
-                    && incoming().text.size() <= 2000
-                    && incoming().category is string
-                    && incoming().category.size() <= 100;
-                    
-      // Strict update validation mapping specific allowed mutations
-      allow update: if isSignedIn() 
-                    && isValidId(goalId)
-                    && existing().userId == request.auth.uid
-                    && incoming().userId == request.auth.uid
-                    && incoming().id == goalId
-                    && incoming().text is string 
-                    && incoming().text.size() <= 2000
-                    && incoming().category is string
-                    && incoming().category.size() <= 100;
-                    
-      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(goalId);
     }
   }
 }

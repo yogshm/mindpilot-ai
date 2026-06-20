@@ -10,6 +10,10 @@ import CoachRoom from "./components/CoachRoom";
 import WeeklyReport from "./components/WeeklyReport";
 import DailyGoals from "./components/DailyGoals";
 import PanicMode from "./components/PanicMode";
+import AuthPage from "./components/AuthPage";
+import VoiceJournal from "./components/VoiceJournal";
+import FutureLetter from "./components/FutureLetter";
+import PatternDiscovery from "./components/PatternDiscovery";
 import { Brain, Sparkles, User, RefreshCw, LogOut, Flame, Heart, AlertCircle, ShieldAlert, Trash2, ClipboardCheck } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { db, auth } from "./firebase";
@@ -79,13 +83,14 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 
 export default function App() {
   const [isDashboardActive, setIsDashboardActive] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "journal" | "triggers" | "trends" | "coach" | "weekly" | "panic" | "goals"
+  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "journal" | "triggers" | "trends" | "coach" | "weekly" | "panic" | "goals" | "voice-journal" | "future-letter" | "pattern-discovery"
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [goals, setGoals] = useState<DailyGoal[]>([]);
   const [selectedEntryDetail, setSelectedEntryDetail] = useState<JournalEntry | null>(null);
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [authChecking, setAuthChecking] = useState(true);
+  const [showAuth, setShowAuth] = useState(false);
 
   // 1. Listen to authentication state shifts
   useEffect(() => {
@@ -291,7 +296,10 @@ export default function App() {
   }
 
   if (!user) {
-    return <LandingPage onStart={handleLogin} />;
+    if (showAuth) {
+      return <AuthPage onSuccess={() => setShowAuth(false)} />;
+    }
+    return <LandingPage onStart={() => setShowAuth(true)} />;
   }
 
   return (
@@ -409,6 +417,17 @@ export default function App() {
           <button
             onClick={() => {
               setSelectedEntryDetail(null);
+              setActiveTab("voice-journal");
+            }}
+            className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
+              ${activeTab === "voice-journal" ? "bg-slate-900 text-white shadow-md shadow-slate-900/10" : "text-slate-600 hover:bg-slate-50"}`}
+          >
+            🎙️ Voice Journaling
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedEntryDetail(null);
               setActiveTab("triggers");
             }}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
@@ -431,6 +450,17 @@ export default function App() {
           <button
             onClick={() => {
               setSelectedEntryDetail(null);
+              setActiveTab("pattern-discovery");
+            }}
+            className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
+              ${activeTab === "pattern-discovery" ? "bg-slate-900 text-white shadow-md shadow-slate-900/10" : "text-slate-600 hover:bg-slate-50"}`}
+          >
+            💡 Active Patterns
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedEntryDetail(null);
               setActiveTab("coach");
             }}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
@@ -448,6 +478,17 @@ export default function App() {
               ${activeTab === "weekly" ? "bg-slate-900 text-white shadow-md shadow-slate-900/10" : "text-slate-600 hover:bg-slate-50"}`}
           >
             Weekly Wellness Report
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedEntryDetail(null);
+              setActiveTab("future-letter");
+            }}
+            className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
+              ${activeTab === "future-letter" ? "bg-slate-900 text-white shadow-md shadow-slate-900/10" : "text-slate-600 hover:bg-slate-50"}`}
+          >
+            ✉️ Future Self Letter
           </button>
 
           <button
@@ -499,17 +540,26 @@ export default function App() {
                   setIsLoadingAnalysis={setIsLoadingAnalysis}
                 />
               )}
+              {activeTab === "voice-journal" && (
+                <VoiceJournal />
+              )}
               {activeTab === "triggers" && (
                 <StressTriggers latestEntry={entries[0] || null} />
               )}
               {activeTab === "trends" && (
                 <TrendsDashboard entries={entries} />
               )}
+              {activeTab === "pattern-discovery" && (
+                <PatternDiscovery entries={entries} />
+              )}
               {activeTab === "coach" && (
                 <CoachRoom latestEntry={entries[0] || null} />
               )}
               {activeTab === "weekly" && (
                 <WeeklyReport entries={entries} />
+              )}
+              {activeTab === "future-letter" && (
+                <FutureLetter />
               )}
               {activeTab === "goals" && (
                 <DailyGoals 
@@ -526,10 +576,6 @@ export default function App() {
                   }
                 />
               )}
-              {activeTab === "panic" && (
-                <WeeklyReport entries={entries} /> // Redundant safety, Panic mode component handles below
-              )}
-              {/* Panic Mode component override */}
               {activeTab === "panic" && <PanicMode />}
             </motion.div>
           </AnimatePresence>

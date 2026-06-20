@@ -1,13 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { JournalEntry, MentalScores } from "../types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
-import { Activity, Flame, TrendingUp, AlertCircle, Compass, ShieldCheck } from "lucide-react";
+import { Activity, Flame, TrendingUp, AlertCircle, Compass, ShieldCheck, RefreshCw, Sparkles } from "lucide-react";
 
 interface TrendsDashboardProps {
   entries: JournalEntry[];
 }
 
+interface BurnoutRisk {
+  riskLevel: "Low" | "Medium" | "High";
+  explanation: string;
+  recommendation: string;
+}
+
 export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
+  const [loadingBurnout, setLoadingBurnout] = useState(false);
+  const [burnoutResult, setBurnoutResult] = useState<BurnoutRisk | null>(null);
+  const [burnoutError, setBurnoutError] = useState("");
+
+  const triggerBurnoutPrediction = async () => {
+    setLoadingBurnout(true);
+    setBurnoutError("");
+    try {
+      const response = await fetch("/api/burnout-risk-predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entries })
+      });
+      if (!response.ok) {
+        throw new Error("Unable to predict burnout risk scores. Re-try.");
+      }
+      const data = await response.json();
+      setBurnoutResult(data);
+    } catch (err: any) {
+      console.error(err);
+      setBurnoutError(err.message || "Could not complete burnout evaluation.");
+    } finally {
+      setLoadingBurnout(false);
+    }
+  };
+
   // Format entries for Recharts. Note: we reverse so dates are chronologically ascending (left to right)
   const chartData = [...entries].reverse().map((entry) => {
     const d = new Date(entry.date);
@@ -180,6 +212,73 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
           </div>
         </div>
       </div>
+
+      {/* Burnout Risk Predictor Control panel */}
+      <div className="p-8 rounded-[2.5rem] bg-indigo-50/30 border border-slate-100 flex flex-col md:flex-row gap-6 items-center justify-between">
+        <div className="space-y-1 text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-1.5 text-[10px] font-mono text-[#4f46e5] font-bold uppercase tracking-wider">
+            <Flame className="w-3.5 h-3.5 text-orange-500 animate-pulse fill-orange-500" />
+            <span>Telemetry Diagnostic</span>
+          </div>
+          <h4 className="text-lg font-serif text-slate-800 font-light">Burnout Risk Predictor</h4>
+          <p className="text-xs text-slate-400 max-w-lg leading-relaxed">
+            Let Gemini analyze your motivation levels, confidence shifts, study workloads, and stress vectors to determine if you are entering academic exhaustion.
+          </p>
+        </div>
+
+        {loadingBurnout ? (
+          <div className="px-6 py-3.5 bg-slate-900 text-white rounded-full flex items-center gap-2 font-mono text-xs font-bold shrink-0">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+            <span>Evaluating Burnout Trend...</span>
+          </div>
+        ) : (
+          <button
+            onClick={triggerBurnoutPrediction}
+            className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-full cursor-pointer shrink-0 shadow-sm flex items-center gap-2"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-yellow-300 fill-yellow-300" />
+            <span>Evaluate Burnout Risk</span>
+          </button>
+        )}
+      </div>
+
+      {burnoutResult && (
+        <div className="p-8 rounded-[2.5rem] bg-white border border-slate-150 shadow-sm space-y-6 animate-fadeIn">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 font-mono">
+            <span className="text-[9px] text-[#4f46e5] uppercase font-bold tracking-widest">Prediction Outcome Matrix</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-400">Exhaustion Risk Index:</span>
+              <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold border uppercase tracking-wider
+                ${burnoutResult.riskLevel === "Low" ? "bg-emerald-50 border-emerald-100 text-emerald-600" : ""}
+                ${burnoutResult.riskLevel === "Medium" ? "bg-amber-50 border-amber-100 text-amber-600" : ""}
+                ${burnoutResult.riskLevel === "High" ? "bg-red-50 border-red-105 text-red-650 animate-pulse" : ""}
+              `}>
+                {burnoutResult.riskLevel} Risk
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start text-xs font-sans">
+            <div className="md:col-span-6 space-y-2">
+              <h5 className="text-[10px] uppercase font-mono tracking-widest text-slate-400 font-bold">Risk Assessment Analysis</h5>
+              <p className="text-slate-650 leading-relaxed font-light">{burnoutResult.explanation}</p>
+            </div>
+            <div className="md:col-span-6 space-y-2 bg-indigo-50/10 p-5 rounded-2xl border border-indigo-150/30">
+              <h5 className="text-[10px] uppercase font-mono tracking-widest text-[#4f46e5] font-bold flex items-center gap-1.5">
+                <Compass className="w-4 h-4 text-indigo-500" />
+                <span>Expert Adjustment Directive</span>
+              </h5>
+              <p className="text-slate-650 leading-relaxed font-light">{burnoutResult.recommendation}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {burnoutError && (
+        <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-xs font-mono max-w-xl">
+          {burnoutError}
+        </div>
+      )}
     </div>
   );
 }

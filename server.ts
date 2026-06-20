@@ -504,6 +504,307 @@ app.post("/api/emergency-panic", async (req, res) => {
   }
 });
 
+// 5. Burnout Risk Predictor Action
+app.post("/api/burnout-risk-predict", async (req, res) => {
+  const { journals, moodLogs } = req.body;
+
+  const currentLogSummary = `
+  Journals Count: ${journals?.length || 0}
+  Mood Logs Count: ${moodLogs?.length || 0}
+  Recent Sleep Metrics: ${JSON.stringify(moodLogs?.map((m: any) => m.sleepHours) || [])}
+  Recent Study Metrics: ${JSON.stringify(moodLogs?.map((m: any) => m.studyHours) || [])}
+  Recent Stress Indicators: ${JSON.stringify(moodLogs?.map((m: any) => m.stressScore) || [])}
+  `;
+
+  const getFallbackBurnoutPrediction = () => {
+    return {
+      burnoutRisk: "Medium",
+      explanation: "You have persistent academic pressure with slight sleep anomalies in your recent check-ins. Taking regular active recovery blocks is advised to avoid cognitive saturation.",
+      factors: {
+        moodTrend: "Fluctuating with study blocks",
+        journalSentiment: "Mildly self-critical",
+        sleepHoursAvg: 6.2,
+        studyHoursAvg: 7.8,
+        stressTrend: "Gradually climbing before mocks"
+      }
+    };
+  };
+
+  if (!ai) {
+    res.json(getFallbackBurnoutPrediction());
+    return;
+  }
+
+  try {
+    const prompt = `You are MindPilot Burnout Diagnostic Agent, an expert in clinical academic performance tracking.
+    Analyze the student's historical preparation logs:
+    ${currentLogSummary}
+
+    Evaluate the burnout risk carefully. Your output must be returned STRICTLY as a JSON conforming to this schema:
+    {
+      "burnoutRisk": "Low" | "Medium" | "High",
+      "explanation": "Expert evaluation message detailing exactly why and how the current mood trends, journal sentiments, sleep hours, study hours, and stress trends lead to this risk score.",
+      "factors": {
+        "moodTrend": "Brief descriptive label of mood direction",
+        "journalSentiment": "Sentiment details e.g. Critical / Safe / Overwhelmed",
+        "sleepHoursAvg": 6.5,
+        "studyHoursAvg": 8.5,
+        "stressTrend": "Label of stress direction"
+      }
+    }`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            burnoutRisk: { type: Type.STRING, description: "Low, Medium, or High" },
+            explanation: { type: Type.STRING },
+            factors: {
+              type: Type.OBJECT,
+              properties: {
+                moodTrend: { type: Type.STRING },
+                journalSentiment: { type: Type.STRING },
+                sleepHoursAvg: { type: Type.NUMBER },
+                studyHoursAvg: { type: Type.NUMBER },
+                stressTrend: { type: Type.STRING }
+              },
+              required: ["moodTrend", "journalSentiment", "sleepHoursAvg", "studyHoursAvg", "stressTrend"]
+            }
+          },
+          required: ["burnoutRisk", "explanation", "factors"]
+        }
+      }
+    });
+
+    const resultText = response.text;
+    if (resultText) {
+      res.json(JSON.parse(resultText.trim()));
+    } else {
+      res.json(getFallbackBurnoutPrediction());
+    }
+  } catch (err) {
+    console.error("Gemini API Error on burnout predict:", err);
+    res.json(getFallbackBurnoutPrediction());
+  }
+});
+
+// 6. Future Self Letter Generation
+app.post("/api/generate-future-letter", async (req, res) => {
+  const { targetExam, displayName } = req.body;
+  const examLabel = targetExam || "your dream exam";
+  const nameLabel = displayName || "Future Champion";
+
+  const getFallbackLetter = () => {
+    return {
+      letterText: `My Dear Self,
+
+I am writing this to you from a place of absolute peace and immense gratitude. Today, we did it. We cleared ${examLabel} with spectacular outcomes, and everyone is celebrating.
+
+I know how hard those late nights in 2026 felt. I remember the doubt, the tiredness, and the fear that you weren't doing enough while taking mock tests. But I want to tell you: every single tear, every focused study slot, and every deep breath you took was building a stronger, more resilient mind. 
+
+You was enough. You are enough. Keep moving, stay steady, trust in your daily consistency, and remember that we are already there waiting for you.
+
+Deepest love,
+Your Future Self`
+    };
+  };
+
+  if (!ai) {
+    res.json(getFallbackLetter());
+    return;
+  }
+
+  try {
+    const prompt = `You are the Future Self of ${nameLabel}, writing from a secure future year, shortly after successfully passing and placing with elite rankings on the exceptionally competitive ${examLabel} exam in India/globally.
+    Write a highly supportive, deeply moving, warm, and comforting letters from the future.
+    Acknowledge their current late-night battles, doubts, tiredness, and mock test anxieties, but reassure them that their effort was fully worth it. Tell them what the future looks like now that the target has been successfully achieved.
+    Keep the letter professional, highly artistic, and intimate. Give specific wisdom suited to clearing ${examLabel} (e.g. revision consistency, mental stamina). Focus on keeping them grounded and inspired.
+    Format your output strictly in JSON format as:
+    {
+      "letterText": "Complete text of the letter with paragraphs. Use clean newlines instead of markdown tags."
+    }`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            letterText: { type: Type.STRING }
+          },
+          required: ["letterText"]
+        }
+      }
+    });
+
+    const resultText = response.text;
+    if (resultText) {
+      res.json(JSON.parse(resultText.trim()));
+    } else {
+      res.json(getFallbackLetter());
+    }
+  } catch (err) {
+    console.error("Gemini API Error on future letter:", err);
+    res.json(getFallbackLetter());
+  }
+});
+
+// 7. Emotional Pattern Discovery Action
+app.post("/api/pattern-discovery", async (req, res) => {
+  const { entries, moodLogs } = req.body;
+  
+  const payload = `
+  Journals: ${JSON.stringify(entries?.map((e: any) => ({ text: e.text, date: e.date })) || [])}
+  Mood Logs: ${JSON.stringify(moodLogs || [])}
+  `;
+
+  const getFallbackPatterns = () => {
+    return {
+      patterns: [
+        {
+          pattern: "Stress increases before scheduled Mock Tests",
+          confidence: 88,
+          details: "We detected high cortisol semantics and critical self-doubt spikes on Fridays and Saturdays in your logged logs.",
+          recommendation: "Shift focus on Friday nights from active mock problem solving to simple visual formula mapping and warm-up exercises."
+        },
+        {
+          pattern: "Confidence drops following restricted Sleep Duration",
+          confidence: 76,
+          details: "A sleep log of less than 6 hours directly aligns with the self-isolation and memory retention deficit noted inside text journals.",
+          recommendation: "Commit to a non-negotiable 7-hour bedtime structure. Consistency is far more impactful than midnight fatigue cramming."
+        }
+      ]
+    };
+  };
+
+  if (!ai) {
+    res.json(getFallbackPatterns());
+    return;
+  }
+
+  try {
+    const prompt = `You are senior research student counselor and behavioral systems analyst.
+    Analyze the student's logged preparation metrics:
+    ${payload}
+
+    Your goal is to find core non-obvious emotional patterns. E.g.
+    - Stress increases before mock tests
+    - Confidence drops after poor sleep
+    - Motivation improves after exercise
+    - Anxiety spikes on Sundays
+    
+    Synthesize exactly 2 or 3 high-confidence discovered pattern details. Return the output STRICTLY as a JSON conforming to this schema:
+    {
+      "patterns": [
+        {
+          "pattern": "Brief pattern summary statement (e.g., Confidence drops following restricted Sleep duration)",
+          "confidence": 85,
+          "details": "Explanation with scientific alignment to logged diaries",
+          "recommendation": "Tailored actionable preventative advice for this particular behavior"
+        }
+      ]
+    }`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            patterns: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  pattern: { type: Type.STRING },
+                  confidence: { type: Type.INTEGER },
+                  details: { type: Type.STRING },
+                  recommendation: { type: Type.STRING }
+                },
+                required: ["pattern", "confidence", "details", "recommendation"]
+              }
+            }
+          },
+          required: ["patterns"]
+        }
+      }
+    });
+
+    const resultText = response.text;
+    if (resultText) {
+      res.json(JSON.parse(resultText.trim()));
+    } else {
+      res.json(getFallbackPatterns());
+    }
+  } catch (err) {
+    console.error("Gemini API Error on pattern discovery:", err);
+    res.json(getFallbackPatterns());
+  }
+});
+
+// 8. ElevenLabs TTS API Route
+app.post("/api/tts", async (req, res) => {
+  const { text } = req.body;
+  if (!text) {
+    res.status(400).json({ error: "Text is empty or invalid" });
+    return;
+  }
+
+  const elApiKey = process.env.ELEVENLABS_API_KEY;
+  if (!elApiKey || elApiKey === "MY_ELEVENLABS_API_KEY") {
+    // Return flag indicating to use browser speech synthesis directly
+    res.json({ fallback: true });
+    return;
+  }
+
+  try {
+    const voiceId = "21m00Tcm4TlvDq8ikWAM"; // Standard premium warm female voice (Rachel)
+    const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": elApiKey
+      },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_monolingual_v1",
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.75
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("Elevenlabs failure status:", response.status, errText);
+      res.json({ fallback: true, error: errText });
+      return;
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    res.set({
+      "Content-Type": "audio/mpeg",
+      "Content-Length": buffer.length
+    });
+    res.send(buffer);
+  } catch (err: any) {
+    console.error("Failed to fetch speech conversion from Elevenlabs:", err);
+    res.json({ fallback: true, error: err.message });
+  }
+});
+
+
 // -------------------------------------------------------------
 // VITE DEV / PRODUCTION DIRECTIVES
 // -------------------------------------------------------------

@@ -1,85 +1,168 @@
 {
   "entities": {
-    "JournalEntry": {
-      "title": "JournalEntry",
-      "description": "Daily mental journal and cognitive mapping records.",
+    "User": {
+      "title": "User",
+      "description": "User profile with academic targets.",
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the journal entry."
-        },
-        "userId": {
-          "type": "string",
-          "description": "The authenticated user unique ID."
-        },
-        "date": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO timestamp of entry creation."
-        },
-        "text": {
-          "type": "string",
-          "description": "Detailed journal content written by the student."
-        },
-        "scores": {
-          "type": "object",
-          "description": "Composite mental health scores from cognitive analysis."
-        },
-        "analysis": {
-          "type": "object",
-          "description": "AI analysis containing stressors, recovery, and coping pathways."
-        }
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "targetExam": { "type": "string" }
       },
-      "required": ["id", "userId", "date", "text", "scores"]
+      "required": ["userId", "email", "createdAt"]
+    },
+    "Journal": {
+      "title": "Journal",
+      "description": "Weekly mental journal and cognitive mapping records.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "text": { "type": "string" },
+        "scores": { "type": "object" },
+        "analysis": { "type": "object" },
+        "sleepHours": { "type": "number" },
+        "studyHours": { "type": "number" }
+      },
+      "required": ["id", "userId", "date", "text", "scores", "analysis", "sleepHours", "studyHours"]
+    },
+    "MoodLog": {
+      "title": "MoodLog",
+      "description": "Daily mood and study tracking metrics log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "mood": { "type": "string" },
+        "stressScore": { "type": "number" },
+        "sleepHours": { "type": "number" },
+        "studyHours": { "type": "number" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "userId", "createdAt", "mood", "stressScore", "sleepHours", "studyHours"]
+    },
+    "WellnessReport": {
+      "title": "WellnessReport",
+      "description": "Generated weekly wellness advisory reports.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "report": { "type": "object" }
+      },
+      "required": ["id", "userId", "createdAt", "report"]
+    },
+    "BurnoutAssessment": {
+      "title": "BurnoutAssessment",
+      "description": "AI-evaluated burnout risks and underlying factors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "burnoutRisk": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "explanation": { "type": "string" },
+        "factors": { "type": "object" }
+      },
+      "required": ["id", "userId", "createdAt", "burnoutRisk", "explanation", "factors"]
+    },
+    "PanicSession": {
+      "title": "PanicSession",
+      "description": "Logged panic sessions and calming actions taken.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reassuringMessage": { "type": "string" },
+        "durationSelected": { "type": "number" },
+        "exerciseTitle": { "type": "string" }
+      },
+      "required": ["id", "userId", "createdAt", "reassuringMessage", "exerciseTitle"]
+    },
+    "FutureLetter": {
+      "title": "FutureLetter",
+      "description": "Supportive letter generated from the student's future successful self.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "targetExam": { "type": "string" },
+        "letterText": { "type": "string" }
+      },
+      "required": ["id", "userId", "createdAt", "targetExam", "letterText"]
+    },
+    "VoiceJournal": {
+      "title": "VoiceJournal",
+      "description": "Voice notes and audio journal insights.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "transcript": { "type": "string" },
+        "insights": { "type": "object" }
+      },
+      "required": ["id", "userId", "createdAt", "transcript", "insights"]
     },
     "DailyGoal": {
       "title": "DailyGoal",
-      "description": "Daily study and wellness focus objectives.",
+      "description": "Daily balanced target goals.",
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the focal goal."
-        },
-        "userId": {
-          "type": "string",
-          "description": "The authenticated user unique ID."
-        },
-        "text": {
-          "type": "string",
-          "description": "The goal task description."
-        },
-        "category": {
-          "type": "string",
-          "enum": ["Study", "Wellness"],
-          "description": "The target domain for balancing pressure levels."
-        },
-        "metric": {
-          "type": "string",
-          "description": "Target metrics like sessions, duration, or items."
-        },
-        "completed": {
-          "type": "boolean",
-          "description": "Signifies goal accomplishment status."
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO timestamp of goal creation."
-        }
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "text": { "type": "string" },
+        "category": { "type": "string", "enum": ["Study", "Wellness"] },
+        "metric": { "type": "string" },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "userId", "text", "category", "completed", "createdAt"]
     }
   },
   "firestore": {
-    "/journal_entries/{entryId}": {
-      "schema": "JournalEntry",
-      "description": "Collection of unauthenticated historical mental logs."
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of target exams and user metadata."
+    },
+    "/journals/{journalId}": {
+      "schema": "Journal",
+      "description": "Collection of text journal logs with AI intelligence analysis."
+    },
+    "/mood_logs/{logId}": {
+      "schema": "MoodLog",
+      "description": "Collection of raw daily check-ins."
+    },
+    "/wellness_reports/{reportId}": {
+      "schema": "WellnessReport",
+      "description": "Collection of structured statistical wellness insights."
+    },
+    "/burnout_assessments/{assessmentId}": {
+      "schema": "BurnoutAssessment",
+      "description": "Collection of comprehensive safety indicators."
+    },
+    "/panic_sessions/{sessionId}": {
+      "schema": "PanicSession",
+      "description": "Logged panic modes."
+    },
+    "/future_letters/{letterId}": {
+      "schema": "FutureLetter",
+      "description": "Supportive correspondence letters."
+    },
+    "/voice_journals/{voiceId}": {
+      "schema": "VoiceJournal",
+      "description": "Transcripts and parameters from speaking sessions."
     },
     "/goals/{goalId}": {
       "schema": "DailyGoal",
-      "description": "Collection of balanced objective actions."
+      "description": "Collection of everyday active checkouts."
     }
   }
 }
