@@ -141,7 +141,7 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
           </div>
           <div className="flex items-baseline justify-between mt-1">
             <span className="text-2xl font-serif text-slate-850">
-              {latestEntry ? `${currentScores.focus}%` : '──'}
+              {latestEntry ? `${currentScores.confidence}%` : '──'}
             </span>
             <span className="text-[8px] font-mono text-slate-600 uppercase">RECALL</span>
           </div>
