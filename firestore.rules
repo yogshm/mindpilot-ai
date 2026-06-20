@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global safety net: deny all by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 2. Rules for journal entries collection
+    match /journal_entries/{entryId} {
+      // Secure list query and individual document accesses
+      allow read, get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      // Strict creation verification
+      allow create: if isSignedIn() 
+                    && isValidId(entryId) 
+                    && incoming().userId == request.auth.uid
+                    && incoming().id == entryId
+                    && incoming().text is string 
+                    && incoming().text.size() <= 20000;
+                    
+      // Strict update validation mapping specific allowed mutations
+      allow update: if isSignedIn() 
+                    && isValidId(entryId)
+                    && existing().userId == request.auth.uid
+                    && incoming().userId == request.auth.uid
+                    && incoming().id == entryId
+                    && incoming().text is string 
+                    && incoming().text.size() <= 20000;
+                    
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // 3. Rules for daily goals collection
+    match /goals/{goalId} {
+      // Secure list query and individual document accesses
+      allow read, get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      // Strict creation verification
+      allow create: if isSignedIn() 
+                    && isValidId(goalId) 
+                    && incoming().userId == request.auth.uid
+                    && incoming().id == goalId
+                    && incoming().text is string 
+                    && incoming().text.size() <= 2000
+                    && incoming().category is string
+                    && incoming().category.size() <= 100;
+                    
+      // Strict update validation mapping specific allowed mutations
+      allow update: if isSignedIn() 
+                    && isValidId(goalId)
+                    && existing().userId == request.auth.uid
+                    && incoming().userId == request.auth.uid
+                    && incoming().id == goalId
+                    && incoming().text is string 
+                    && incoming().text.size() <= 2000
+                    && incoming().category is string
+                    && incoming().category.size() <= 100;
+                    
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+  }
+}

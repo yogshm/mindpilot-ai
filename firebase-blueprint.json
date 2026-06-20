@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "Daily mental journal and cognitive mapping records.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the journal entry."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The authenticated user unique ID."
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp of entry creation."
+        },
+        "text": {
+          "type": "string",
+          "description": "Detailed journal content written by the student."
+        },
+        "scores": {
+          "type": "object",
+          "description": "Composite mental health scores from cognitive analysis."
+        },
+        "analysis": {
+          "type": "object",
+          "description": "AI analysis containing stressors, recovery, and coping pathways."
+        }
+      },
+      "required": ["id", "userId", "date", "text", "scores"]
+    },
+    "DailyGoal": {
+      "title": "DailyGoal",
+      "description": "Daily study and wellness focus objectives.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the focal goal."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The authenticated user unique ID."
+        },
+        "text": {
+          "type": "string",
+          "description": "The goal task description."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Study", "Wellness"],
+          "description": "The target domain for balancing pressure levels."
+        },
+        "metric": {
+          "type": "string",
+          "description": "Target metrics like sessions, duration, or items."
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Signifies goal accomplishment status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp of goal creation."
+        }
+      },
+      "required": ["id", "userId", "text", "category", "completed", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/journal_entries/{entryId}": {
+      "schema": "JournalEntry",
+      "description": "Collection of unauthenticated historical mental logs."
+    },
+    "/goals/{goalId}": {
+      "schema": "DailyGoal",
+      "description": "Collection of balanced objective actions."
+    }
+  }
+}

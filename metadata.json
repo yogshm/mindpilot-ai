@@ -1,0 +1,6 @@
+{
+  "name": "MindPilot AI",
+  "description": "An AI-powered Exam Wellness Copilot that helps students monitor mental health, analyze stress triggers, predict burnout risks, and get personalized support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
