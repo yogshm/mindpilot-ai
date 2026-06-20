@@ -1,262 +1,121 @@
-import React, { useState, useEffect } from "react";
+/**
+ * MindPilot AI Core Application Wrapper
+ * Implements route-based code splitting, lazy-loading, and decoupled state management hooks.
+ */
+
+import React, { useState, Suspense } from "react";
 import { JournalEntry, MentalScores, AnalysisResult, DailyGoal } from "./types";
-import { getInitialEntries } from "./utils/dummyData";
-import LandingPage from "./components/LandingPage";
-import DashboardOverview from "./components/DashboardOverview";
-import DailyJournal from "./components/DailyJournal";
-import StressTriggers from "./components/StressTriggers";
-import TrendsDashboard from "./components/TrendsDashboard";
-import CoachRoom from "./components/CoachRoom";
-import WeeklyReport from "./components/WeeklyReport";
-import DailyGoals from "./components/DailyGoals";
-import PanicMode from "./components/PanicMode";
-import AuthPage from "./components/AuthPage";
-import VoiceJournal from "./components/VoiceJournal";
-import FutureLetter from "./components/FutureLetter";
-import PatternDiscovery from "./components/PatternDiscovery";
-import { Brain, Sparkles, User, RefreshCw, LogOut, Flame, Heart, AlertCircle, ShieldAlert, Trash2, ClipboardCheck } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { db, auth } from "./firebase";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { useJournal } from "./hooks/useJournal";
+import { useGoals } from "./hooks/useGoals";
 import { 
-  collection, 
-  onSnapshot, 
-  doc, 
-  setDoc, 
-  deleteDoc,
-  query,
-  where
-} from "firebase/firestore";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-  onAuthStateChanged,
-  User as FirebaseUser
-} from "firebase/auth";
+  Brain, 
+  LogOut, 
+  RefreshCw, 
+  ShieldAlert, 
+  Trash2 
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
-enum OperationType {
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete',
-  LIST = 'list',
-  GET = 'get',
-  WRITE = 'write',
+// Lazy-loaded subcomponents for optimized initial bundle sizes and performance metrics
+const LandingPage = React.lazy(() => import("./components/LandingPage"));
+const DashboardOverview = React.lazy(() => import("./components/DashboardOverview"));
+const DailyJournal = React.lazy(() => import("./components/DailyJournal"));
+const StressTriggers = React.lazy(() => import("./components/StressTriggers"));
+const TrendsDashboard = React.lazy(() => import("./components/TrendsDashboard"));
+const CoachRoom = React.lazy(() => import("./components/CoachRoom"));
+const WeeklyReport = React.lazy(() => import("./components/WeeklyReport"));
+const DailyGoals = React.lazy(() => import("./components/DailyGoals"));
+const PanicMode = React.lazy(() => import("./components/PanicMode"));
+const AuthPage = React.lazy(() => import("./components/AuthPage"));
+const VoiceJournal = React.lazy(() => import("./components/VoiceJournal"));
+const FutureLetter = React.lazy(() => import("./components/FutureLetter"));
+const PatternDiscovery = React.lazy(() => import("./components/PatternDiscovery"));
+
+/**
+ * Premium skeleton component displayed during asynchronous lazy loading transitions
+ */
+function TabLoadingSkeleton() {
+  return (
+    <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm space-y-6 animate-pulse">
+      <div className="h-6 bg-slate-100 rounded w-1/3" />
+      <div className="space-y-3">
+        <div className="h-4 bg-slate-50/60 rounded" />
+        <div className="h-4 bg-slate-50/60 rounded w-5/6" />
+        <div className="h-4 bg-slate-50/60 rounded w-2/3" />
+      </div>
+      <div className="h-32 bg-slate-50/60 rounded-2xl" />
+    </div>
+  );
 }
 
-interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId?: string | null;
-    email?: string | null;
-    emailVerified?: boolean | null;
-    isAnonymous?: boolean | null;
-    tenantId?: string | null;
-    providerInfo?: {
-      providerId?: string | null;
-      email?: string | null;
-    }[];
-  }
-}
+/**
+ * Primary authenticated dashboard container layout
+ */
+function MainAppContent() {
+  const { user, authChecking, handleLogout } = useAuth();
+  const { entries, saveEntry, clearLogs, loading: journalLoading } = useJournal();
+  const { goals, updateGoals, loading: goalsLoading } = useGoals();
 
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid || null,
-      email: auth.currentUser?.email || null,
-      emailVerified: auth.currentUser?.emailVerified || null,
-      isAnonymous: auth.currentUser?.isAnonymous || null,
-      tenantId: auth.currentUser?.tenantId || null,
-      providerInfo: auth.currentUser?.providerData?.map(provider => ({
-        providerId: provider.providerId,
-        email: provider.email,
-      })) || []
-    },
-    operationType,
-    path
-  };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
-}
-
-export default function App() {
-  const [isDashboardActive, setIsDashboardActive] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "journal" | "triggers" | "trends" | "coach" | "weekly" | "panic" | "goals" | "voice-journal" | "future-letter" | "pattern-discovery"
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [goals, setGoals] = useState<DailyGoal[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("overview");
   const [selectedEntryDetail, setSelectedEntryDetail] = useState<JournalEntry | null>(null);
-  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [authChecking, setAuthChecking] = useState(true);
-  const [showAuth, setShowAuth] = useState(false);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState<boolean>(false);
+  const [showAuth, setShowAuth] = useState<boolean>(false);
 
-  // 1. Listen to authentication state shifts
-  useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setAuthChecking(false);
-      if (firebaseUser) {
-        setIsDashboardActive(true);
-      } else {
-        setIsDashboardActive(false);
-        setEntries([]);
-        setGoals([]);
-      }
-    });
-    return () => unsubscribeAuth();
-  }, []);
-
-  // 2. Real-time synchronization of journal entries and daily focus goals with Firestore (only when authenticated)
-  useEffect(() => {
-    if (!user) return;
-
-    // 1. Listen to journal entries in real time for this authenticated user
-    const entriesQuery = query(
-      collection(db, "journal_entries"),
-      where("userId", "==", user.uid)
+  // Fallback loading check for authentications
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-fadeIn">
+          <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin" />
+          <p className="text-slate-500 font-mono text-xs">Synchronizing mental telemetry...</p>
+        </div>
+      </div>
     );
+  }
 
-    const unsubscribeEntries = onSnapshot(
-      entriesQuery,
-      async (snapshot) => {
-        try {
-          if (snapshot.empty) {
-            setEntries([]);
-          } else {
-            const fetchedEntries = snapshot.docs.map(doc => doc.data() as JournalEntry);
-            // Client-side sort by date descending to ensure robust ordering
-            fetchedEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-            setEntries(fetchedEntries);
-          }
-        } catch (err) {
-          handleFirestoreError(err, OperationType.WRITE, "journal_entries");
-        }
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.GET, "journal_entries");
-      }
-    );
-
-    // 2. Listen to goals in real time for this authenticated user
-    const goalsQuery = query(
-      collection(db, "goals"),
-      where("userId", "==", user.uid)
-    );
-
-    const unsubscribeGoals = onSnapshot(
-      goalsQuery,
-      (snapshot) => {
-        const fetchedGoals = snapshot.docs.map(doc => doc.data() as DailyGoal);
-        // Client-side sort by creation time descending to preserve stack order
-        fetchedGoals.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        setGoals(fetchedGoals);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.GET, "goals");
-      }
-    );
-
-    return () => {
-      unsubscribeEntries();
-      unsubscribeGoals();
-    };
-  }, [user]);
-
-  const handleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error("Error performing Google Sign-In:", err);
+  // Unauthenticated landings
+  if (!user) {
+    if (showAuth) {
+      return (
+        <Suspense fallback={<TabLoadingSkeleton />}>
+          <AuthPage onSuccess={() => setShowAuth(false)} />
+        </Suspense>
+      );
     }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error("Error performing Sign-Out:", err);
-    }
-  };
+    return (
+      <Suspense fallback={<TabLoadingSkeleton />}>
+        <LandingPage onStart={() => setShowAuth(true)} />
+      </Suspense>
+    );
+  }
 
   const handleUpdateGoals = async (updatedGoals: DailyGoal[]) => {
-    if (!user) return;
-    try {
-      // Find deleted goals by comparing against active memory cache
-      const existingIds = new Set(updatedGoals.map(g => g.id));
-      const deletedGoals = goals.filter(g => !existingIds.has(g.id));
-
-      // Execute deletions in Firestore
-      for (const dg of deletedGoals) {
-        try {
-          await deleteDoc(doc(db, "goals", dg.id));
-        } catch (delErr) {
-          handleFirestoreError(delErr, OperationType.DELETE, `goals/${dg.id}`);
-        }
-      }
-
-      // Upsert updated/new goals in Firestore
-      for (const g of updatedGoals) {
-        try {
-          const userScopedGoal = {
-            ...g,
-            userId: user.uid
-          };
-          await setDoc(doc(db, "goals", g.id), userScopedGoal);
-        } catch (setErr) {
-          handleFirestoreError(setErr, OperationType.WRITE, `goals/${g.id}`);
-        }
-      }
-    } catch (err) {
-      console.error("Error synchronizing goals with Firestore:", err);
-    }
+    await updateGoals(updatedGoals);
   };
 
-  // Create a new analyzed entry inside Firestore
   const handleSaveNewEntry = async (text: string, scores: MentalScores, analysis: AnalysisResult) => {
-    if (!user) return;
-    const newEntry: JournalEntry = {
-      id: "entry_" + Date.now(),
-      userId: user.uid,
-      date: new Date().toISOString(),
-      text,
-      scores,
-      analysis
-    };
-
     try {
-      await setDoc(doc(db, "journal_entries", newEntry.id), newEntry);
-      
-      // Set active detail immediately so they can see the newly generated analysis
-      setSelectedEntryDetail(newEntry);
+      const entry = await saveEntry(text, scores, analysis);
+      setSelectedEntryDetail(entry);
       setActiveTab("journal");
     } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `journal_entries/${newEntry.id}`);
+      console.error("Save new entry failed execution:", err);
     }
   };
 
   const handleClearLogs = async () => {
     if (window.confirm("Are you sure you want to delete all daily logs? This action is irreversible and your progress tracker will reset.")) {
       try {
-        // Delete all documents in our current cache from Firestore
-        for (const entry of entries) {
-          try {
-            await deleteDoc(doc(db, "journal_entries", entry.id));
-          } catch (delErr) {
-            handleFirestoreError(delErr, OperationType.DELETE, `journal_entries/${entry.id}`);
-          }
-        }
+        await clearLogs();
         setSelectedEntryDetail(null);
         setActiveTab("overview");
       } catch (err) {
-        console.error("Error clearing logs from Firestore:", err);
+        console.error("Clear database logs exception:", err);
       }
     }
   };
 
-  // Inspect past card detail logic
   const handleSelectEntryForDetail = (entry: JournalEntry) => {
     setSelectedEntryDetail(entry);
     setActiveTab("journal");
@@ -266,29 +125,10 @@ export default function App() {
     setSelectedEntryDetail(null);
   };
 
-  // Floating Emergency Panic toggle
   const handleTriggerPanicTab = () => {
     setSelectedEntryDetail(null);
     setActiveTab("panic");
   };
-
-  if (authChecking) {
-    return (
-      <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin" />
-          <p className="text-slate-500 font-mono text-xs">Synchronizing mental telemetry...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    if (showAuth) {
-      return <AuthPage onSuccess={() => setShowAuth(false)} />;
-    }
-    return <LandingPage onStart={() => setShowAuth(true)} />;
-  }
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-slate-800 font-sans selection:bg-brand-50 selection:text-brand-900 pb-16 relative overflow-x-hidden">
@@ -344,10 +184,10 @@ export default function App() {
               onClick={handleTriggerPanicTab}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 cursor-pointer transition-all border
                 ${activeTab === "panic" 
-                  ? "bg-red-600 text-white border-transparent" 
-                  : "bg-red-50 text-red-600 border-red-100 hover:bg-red-100"}`}
+                  ? "bg-red-600 text-white border-transparent w-[140px] justify-center" 
+                  : "bg-red-50 text-red-600 border-red-100 hover:bg-red-100/80 w-[140px] justify-center"}`}
             >
-              <ShieldAlert className="w-3.5 h-3.5" />
+              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
               <span>Emergency Calm</span>
             </button>
 
@@ -357,7 +197,7 @@ export default function App() {
                 id="header-btn-clear"
                 onClick={handleClearLogs}
                 title="Reset local journal metrics"
-                className="p-2 rounded-lg bg-slate-50 border border-slate-100 text-slate-500 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all cursor-pointer"
+                className="p-2 rounded-lg bg-slate-50 border border-slate-100 text-slate-500 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all cursor-pointer shrink-0"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -365,7 +205,7 @@ export default function App() {
 
             <button
               onClick={handleLogout}
-              className="p-2 rounded-lg bg-slate-50 border border-slate-100 text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-100 transition-all cursor-pointer"
+              className="p-2 rounded-lg bg-slate-50 border border-slate-100 text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-100 transition-all cursor-pointer shrink-0"
               title="Sign out from companion"
             >
               <LogOut className="w-4 h-4" />
@@ -493,14 +333,14 @@ export default function App() {
           <button
             onClick={handleTriggerPanicTab}
             className={`w-full text-left px-4 py-3 rounded-lg text-xs font-semibold uppercase font-mono tracking-wider transition-all block shrink-0
-              ${activeTab === "panic" ? "bg-red-600 text-white shadow-md" : "text-red-600 bg-red-50/50 hover:bg-red-50"}`}
+              ${activeTab === "panic" ? "bg-red-600 text-white shadow-md" : "text-red-700 bg-red-50 hover:bg-red-100"}`}
           >
             🚨 Panic Mode relief
           </button>
         </nav>
 
         {/* Content Area panel */}
-        <section id="dashboard-content-panel" className="md:col-span-9">
+        <section id="dashboard-content-panel" className="md:col-span-9 w-full overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab + (selectedEntryDetail ? "_detail" : "")}
@@ -508,68 +348,83 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
               transition={{ duration: 0.15 }}
+              className="w-full"
             >
-              {activeTab === "overview" && (
-                <DashboardOverview 
-                  entries={entries} 
-                  onNavigateTab={(tab) => {
-                    setSelectedEntryDetail(null);
-                    setActiveTab(tab);
-                  }}
-                  onSelectEntry={handleSelectEntryForDetail}
-                />
-              )}
-              {activeTab === "journal" && (
-                <DailyJournal
-                  onSaveNewEntry={handleSaveNewEntry}
-                  selectedEntryDetail={selectedEntryDetail}
-                  onClearSelectedDetail={handleClearSelectedDetail}
-                  isLoadingAnalysis={isLoadingAnalysis}
-                  setIsLoadingAnalysis={setIsLoadingAnalysis}
-                />
-              )}
-              {activeTab === "voice-journal" && (
-                <VoiceJournal />
-              )}
-              {activeTab === "triggers" && (
-                <StressTriggers latestEntry={entries[0] || null} />
-              )}
-              {activeTab === "trends" && (
-                <TrendsDashboard entries={entries} />
-              )}
-              {activeTab === "pattern-discovery" && (
-                <PatternDiscovery entries={entries} />
-              )}
-              {activeTab === "coach" && (
-                <CoachRoom latestEntry={entries[0] || null} />
-              )}
-              {activeTab === "weekly" && (
-                <WeeklyReport entries={entries} />
-              )}
-              {activeTab === "future-letter" && (
-                <FutureLetter />
-              )}
-              {activeTab === "goals" && (
-                <DailyGoals 
-                  goals={goals} 
-                  onUpdateGoals={handleUpdateGoals}
-                  entriesCountForToday={
-                    entries.filter((e) => {
-                      const entryDate = new Date(e.date);
-                      const today = new Date();
-                      return entryDate.getDate() === today.getDate() &&
-                             entryDate.getMonth() === today.getMonth() &&
-                             entryDate.getFullYear() === today.getFullYear();
-                    }).length
-                  }
-                />
-              )}
-              {activeTab === "panic" && <PanicMode />}
+              {/* Suspense context enables lazy chunk resolution with skeleton UI preservation */}
+              <Suspense fallback={<TabLoadingSkeleton />}>
+                {activeTab === "overview" && (
+                  <DashboardOverview 
+                    entries={entries} 
+                    onNavigateTab={(tab) => {
+                      setSelectedEntryDetail(null);
+                      setActiveTab(tab);
+                    }}
+                    onSelectEntry={handleSelectEntryForDetail}
+                  />
+                )}
+                {activeTab === "journal" && (
+                  <DailyJournal
+                    onSaveNewEntry={handleSaveNewEntry}
+                    selectedEntryDetail={selectedEntryDetail}
+                    onClearSelectedDetail={handleClearSelectedDetail}
+                    isLoadingAnalysis={isLoadingAnalysis}
+                    setIsLoadingAnalysis={setIsLoadingAnalysis}
+                  />
+                )}
+                {activeTab === "voice-journal" && (
+                  <VoiceJournal />
+                )}
+                {activeTab === "triggers" && (
+                  <StressTriggers latestEntry={entries[0] || null} />
+                )}
+                {activeTab === "trends" && (
+                  <TrendsDashboard entries={entries} />
+                )}
+                {activeTab === "pattern-discovery" && (
+                  <PatternDiscovery entries={entries} />
+                )}
+                {activeTab === "coach" && (
+                  <CoachRoom latestEntry={entries[0] || null} />
+                )}
+                {activeTab === "weekly" && (
+                  <WeeklyReport entries={entries} />
+                )}
+                {activeTab === "future-letter" && (
+                  <FutureLetter />
+                )}
+                {activeTab === "goals" && (
+                  <DailyGoals 
+                    goals={goals} 
+                    onUpdateGoals={handleUpdateGoals}
+                    entriesCountForToday={
+                      entries.filter((e) => {
+                        const entryDate = new Date(e.date);
+                        const today = new Date();
+                        return entryDate.getDate() === today.getDate() &&
+                               entryDate.getMonth() === today.getMonth() &&
+                               entryDate.getFullYear() === today.getFullYear();
+                      }).length
+                    }
+                  />
+                )}
+                {activeTab === "panic" && <PanicMode />}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </section>
 
       </main>
     </div>
+  );
+}
+
+/**
+ * Root context wrapper of the application
+ */
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainAppContent />
+    </AuthProvider>
   );
 }

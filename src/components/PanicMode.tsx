@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { AlertOctagon, Heart, Music, Check, Compass, Shield, Wind, Sparkles, AlertTriangle, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PanicIntervention } from "../types";
+import { aiService } from "../services/ai";
+import { DEFAULT_PANIC_INTERVENTION } from "../constants";
 
 export default function PanicMode() {
   const [panicIntervention, setPanicIntervention] = useState<PanicIntervention | null>(null);
@@ -22,21 +24,9 @@ export default function PanicMode() {
 
     setSpeakingText(true);
     try {
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
-      const data = await response.json();
-      if (data && !data.fallback) {
-        const audioRes = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text })
-        });
-        const blob = await audioRes.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
+      const results = await aiService.getVoiceTTS(text);
+      if (results.audioUrl) {
+        const audio = new Audio(results.audioUrl);
         audio.onended = () => setSpeakingText(false);
         audio.play();
       } else {
@@ -55,39 +45,12 @@ export default function PanicMode() {
   const triggerPanicRelief = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/emergency-panic", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }
-      });
-      const data = await response.json();
+      const data = await aiService.getEmergencyPanicIntervention();
       setPanicIntervention(data);
     } catch (err) {
       console.error("Failed to query custom panic intervention, setting client local defaults:", err);
       // Resilience fallback
-      setPanicIntervention({
-        breathingGuide: {
-          title: "60-Second Box Resettlement",
-          description: "A clinical box breathing standard used to quickly lower heart rate and reduce cortisol spikes.",
-          steps: [
-            "Inhale quietly through your nose for 4 seconds.",
-            "Hold your lungs full of air for 4 seconds.",
-            "Exhale gently through your mouth, parting your lips, for 4 seconds.",
-            "Hold your lungs completely empty for 4 seconds before the next repetition."
-          ]
-        },
-        affirmations: [
-          "This moment is tough, but I am tougher than this single page or test.",
-          "My worth as a human is entirely independent of my mock test scores.",
-          "Panic is just an energy rush. I can let it step through me and dissolve slowly.",
-          "I have worked hard and I am safe right now."
-        ],
-        immediateActions: [
-          "Push your chair back and place both feet flat on the floor.",
-          "Take a glass of cool water and sip it slowly, focusing on the temperature.",
-          "Gently look around you and name 5 things you can physically see, 4 things you can touch, and 3 things you can hear."
-        ],
-        shortTermMessage: "You are experiencing high exam-anxiety. Please remember: No single test determines the ultimate flow of your life. Take this evening entirely off. Your cognitive health is your absolute greatest exam asset."
-      });
+      setPanicIntervention(DEFAULT_PANIC_INTERVENTION);
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { JournalEntry, WeeklyWellnessReport } from "../types";
 import { FileText, Sparkles, AlertCircle, RefreshCw, BarChart2, Star, TrendingUp, TrendingDown, Clipboard, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { jsPDF } from "jspdf";
+import { aiService } from "../services/ai";
 
 interface WeeklyReportProps {
   entries: JournalEntry[];
@@ -135,17 +136,7 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/generate-weekly-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entries: entries })
-      });
-
-      if (!response.ok) {
-        throw new Error("Weekly report compilation returned a server error. Please try again.");
-      }
-
-      const data: WeeklyWellnessReport = await response.json();
+      const data = await aiService.generateWeeklyWellnessReport(entries);
       setReport(data);
     } catch (err: any) {
       console.error(err);

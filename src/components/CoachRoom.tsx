@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { JournalEntry, MentalScores } from "../types";
 import { Compass, Sparkles, Send, Award, Smile, BookOpen, AlertCircle, RefreshCw, Zap, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { aiService } from "../services/ai";
 
 interface CoachRoomProps {
   latestEntry: JournalEntry | null;
@@ -30,21 +31,9 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
 
     setPlayingTTS(true);
     try {
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: speechText })
-      });
-      const data = await response.json();
-      if (data && !data.fallback) {
-        const audioRes = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: speechText })
-        });
-        const blob = await audioRes.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
+      const result = await aiService.getVoiceTTS(speechText);
+      if (result.audioUrl) {
+        const audio = new Audio(result.audioUrl);
         audio.onended = () => setPlayingTTS(false);
         audio.play();
       } else {
@@ -78,21 +67,11 @@ export default function CoachRoom({ latestEntry }: CoachRoomProps) {
     setErrorMsg("");
     setIsLoading(true);
     try {
-      const response = await fetch("/api/coach", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          currentStateText: currentJournalText,
-          scores: defaultScores,
-          userMessage: userQuery
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to receive coaching directive. Please try again.");
-      }
-
-      const parsed: CoachResponse = await response.json();
+      const parsed = await aiService.getCoachRoomAdvice(
+        currentJournalText,
+        defaultScores,
+        userQuery
+      );
       setCoachResponse(parsed);
       setUserQuery("");
     } catch (err: any) {

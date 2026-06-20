@@ -3,9 +3,11 @@ import { Mail, Sparkles, RefreshCw, AlertCircle, History, BookOpen, Clock, Heart
 import { motion, AnimatePresence } from "motion/react";
 import { auth, db } from "../firebase";
 import { collection, addDoc, getDocs, query, where, orderBy } from "firebase/firestore";
+import { aiService } from "../services/ai";
+import { ELITE_EXAMS } from "../constants";
 
 export default function FutureLetter() {
-  const [targetExam, setTargetExam] = useState("JEE (Engineering)");
+  const [targetExam, setTargetExam] = useState(ELITE_EXAMS[0]);
   const [timelineYears, setTimelineYears] = useState("5 Years");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -46,17 +48,7 @@ export default function FutureLetter() {
       const user = auth.currentUser;
       const displayName = user?.displayName || "Future Champion";
 
-      const response = await fetch("/api/generate-future-letter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetExam, displayName })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to summon future letter. Try again.");
-      }
-
-      const data = await response.json();
+      const data = await aiService.generateFutureSelfLetter(targetExam, displayName);
       setLetterText(data.letterText);
       setIsEnvelopeOpen(true);
 

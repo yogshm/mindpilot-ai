@@ -3,6 +3,7 @@ import { Mic, MicOff, Sparkles, RefreshCw, AlertCircle, Play, Square, FileText, 
 import { motion, AnimatePresence } from "motion/react";
 import { auth, db } from "../firebase";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { aiService } from "../services/ai";
 
 interface VoiceJournalProps {
   onAnalyzeSuccess?: () => void;
@@ -121,22 +122,9 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
 
     setPlayingTTS(true);
     try {
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: speechText })
-      });
-      const data = await response.json();
-      if (data && !data.fallback) {
-        // Play elevenlabs audio buffer returned
-        const audioRes = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: speechText })
-        });
-        const blob = await audioRes.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
+      const result = await aiService.getVoiceTTS(speechText);
+      if (result.audioUrl) {
+        const audio = new Audio(result.audioUrl);
         audio.onended = () => setPlayingTTS(false);
         audio.play();
       } else {
@@ -163,17 +151,7 @@ export default function VoiceJournal({ onAnalyzeSuccess }: VoiceJournalProps) {
     setErrorMsg("");
     setLoading(true);
     try {
-      const resp = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: transcript })
-      });
-
-      if (!resp.ok) {
-        throw new Error("Failed to translate emotional parameters. Re-run analysis.");
-      }
-
-      const data = await resp.json();
+      const data = await aiService.analyzeJournalEntry(transcript);
       setAnalysisResult(data);
 
       // Save to voice_journals Firestore collection per User

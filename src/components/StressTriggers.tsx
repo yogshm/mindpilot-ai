@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { JournalEntry, StressTrigger } from "../types";
 import { Brain, Sparkles, AlertCircle, RefreshCw, Layers, ShieldCheck, HeartPulse, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { aiService } from "../services/ai";
 
 interface StressTriggersProps {
   latestEntry: JournalEntry | null;
@@ -63,18 +64,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
     setClassificationResult(null);
 
     try {
-      // Create a specific classificator post request proxy
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: testQuote })
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to classify online.");
-      }
-
-      const raw = await response.json();
+      const raw = await aiService.analyzeJournalEntry(testQuote);
       
       if (raw.stressTriggers && raw.stressTriggers.length > 0) {
         const top = raw.stressTriggers[0];

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Sparkles, Brain, RefreshCw, AlertCircle, TrendingUp, Compass, CheckCircle, Lightbulb } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { aiService } from "../services/ai";
 
 interface PatternDiscoveryProps {
   entries: any[];
@@ -28,17 +29,7 @@ export default function PatternDiscovery({ entries, moodLogs = [] }: PatternDisc
     setLoading(true);
     setErrorMsg("");
     try {
-      const response = await fetch("/api/pattern-discovery", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entries, moodLogs })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to map psychological trends. Try again.");
-      }
-
-      const data = await response.json();
+      const data = await aiService.discoverEmotionalPatterns(entries, moodLogs);
       setDiscovered(data.patterns || []);
     } catch (err: any) {
       console.error(err);

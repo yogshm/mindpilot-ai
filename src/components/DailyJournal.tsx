@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { JournalEntry, AnalysisResult, MentalScores } from "../types";
 import { Save, Brain, Sparkles, AlertCircle, RefreshCw, Clipboard, ShieldCheck, HeartPulse, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { aiService } from "../services/ai";
 
 interface DailyJournalProps {
   onSaveNewEntry: (text: string, scores: MentalScores, analysis: AnalysisResult) => void;
@@ -55,17 +56,7 @@ export default function DailyJournal({
     }, 1200);
 
     try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: journalText })
-      });
-
-      if (!response.ok) {
-        throw new Error("Analysis failed. The copilot is experiencing background load.");
-      }
-
-      const parsedAnalysis: AnalysisResult = await response.json();
+      const parsedAnalysis = await aiService.analyzeJournalEntry(journalText);
 
       // Determine starting scores (weighted with manual sliders if checked)
       const finalScores = useManualScores ? manualScores : parsedAnalysis.scores;

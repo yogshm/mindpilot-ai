@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { JournalEntry, MentalScores } from "../types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
 import { Activity, Flame, TrendingUp, AlertCircle, Compass, ShieldCheck, RefreshCw, Sparkles } from "lucide-react";
+import { aiService } from "../services/ai";
 
 interface TrendsDashboardProps {
   entries: JournalEntry[];
@@ -22,16 +23,12 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
     setLoadingBurnout(true);
     setBurnoutError("");
     try {
-      const response = await fetch("/api/burnout-risk-predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entries })
+      const data = await aiService.predictBurnoutRisk(entries, []);
+      setBurnoutResult({
+        riskLevel: data.burnoutRisk || "Medium",
+        explanation: data.explanation || "Your active preparation charts show moderate developmental shifts.",
+        recommendation: data.factors?.stressTrend || "Maintain your strict boundary protocols."
       });
-      if (!response.ok) {
-        throw new Error("Unable to predict burnout risk scores. Re-try.");
-      }
-      const data = await response.json();
-      setBurnoutResult(data);
     } catch (err: any) {
       console.error(err);
       setBurnoutError(err.message || "Could not complete burnout evaluation.");
@@ -40,51 +37,57 @@ export default function TrendsDashboard({ entries }: TrendsDashboardProps) {
     }
   };
 
-  // Format entries for Recharts. Note: we reverse so dates are chronologically ascending (left to right)
-  const chartData = [...entries].reverse().map((entry) => {
-    const d = new Date(entry.date);
-    return {
-      dateStr: d.toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-      stress: entry.scores.stress,
-      motivation: entry.scores.motivation,
-      focus: entry.scores.focus,
-      confidence: entry.scores.confidence,
-      energy: entry.scores.energy || 50
+  // Format entries for Recharts - Memoized to eliminate redundant renders
+  const chartData = useMemo(() => {
+    return [...entries].reverse().map((entry) => {
+      const d = new Date(entry.date);
+      return {
+        dateStr: d.toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+        stress: entry.scores.stress,
+        motivation: entry.scores.motivation,
+        focus: entry.scores.focus,
+        confidence: entry.scores.confidence,
+        energy: entry.scores.energy || 50
+      };
+    });
+  }, [entries]);
+
+  // Calculate overall averages - Memoized
+  const averages = useMemo(() => {
+    const calculateAverage = (key: keyof MentalScores): number => {
+      if (entries.length === 0) return 0;
+      const sum = entries.reduce((acc, curr) => acc + (curr.scores[key] || 0), 0);
+      return Math.round(sum / entries.length);
     };
-  });
 
-  // Calculate overall averages
-  const calculateAverage = (key: keyof MentalScores): number => {
-    if (entries.length === 0) return 0;
-    const sum = entries.reduce((acc, curr) => acc + (curr.scores[key] || 0), 0);
-    return Math.round(sum / entries.length);
-  };
+    return {
+      stress: calculateAverage("stress"),
+      motivation: calculateAverage("motivation"),
+      focus: calculateAverage("focus"),
+      confidence: calculateAverage("confidence"),
+      energy: calculateAverage("energy")
+    };
+  }, [entries]);
 
-  const averages = {
-    stress: calculateAverage("stress"),
-    motivation: calculateAverage("motivation"),
-    focus: calculateAverage("focus"),
-    confidence: calculateAverage("confidence"),
-    energy: calculateAverage("energy")
-  };
+  // Format today's latest comparison vs historical averages for Radar - Memoized
+  const radarData = useMemo(() => {
+    const latestEntry = entries[0] || null;
+    const latestScores = latestEntry?.scores || {
+      stress: 0,
+      motivation: 0,
+      focus: 0,
+      confidence: 0,
+      energy: 50
+    };
 
-  // Format today's latest comparison vs historical averages for Radar
-  const latestEntry = entries[0] || null;
-  const latestScores = latestEntry?.scores || {
-    stress: 0,
-    motivation: 0,
-    focus: 0,
-    confidence: 0,
-    energy: 50
-  };
-
-  const radarData = [
-    { subject: "Stress Level", latest: latestScores.stress, average: averages.stress },
-    { subject: "Motivation", latest: latestScores.motivation, average: averages.motivation },
-    { subject: "Focus", latest: latestScores.focus, average: averages.focus },
-    { subject: "Confidence", latest: latestScores.confidence, average: averages.confidence },
-    { subject: "Energy", latest: latestScores.energy || 50, average: averages.energy }
-  ];
+    return [
+      { subject: "Stress Level", latest: latestScores.stress, average: averages.stress },
+      { subject: "Motivation", latest: latestScores.motivation, average: averages.motivation },
+      { subject: "Focus", latest: latestScores.focus, average: averages.focus },
+      { subject: "Confidence", latest: latestScores.confidence, average: averages.confidence },
+      { subject: "Energy", latest: latestScores.energy || 50, average: averages.energy }
+    ];
+  }, [entries, averages]);
 
   return (
     <div id="trends-dashboard-view" className="space-y-8 animate-fadeIn">
