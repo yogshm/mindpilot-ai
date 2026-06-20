@@ -90,7 +90,7 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
         {/* Metric 1 - Stress Score */}
         <div id="metric-card-stress" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">STRESS SCALE</span>
+            <span className="text-[9px] font-bold font-mono text-slate-500 uppercase tracking-wider">STRESS SCALE</span>
             <span className={`w-1.5 h-1.5 rounded-full ${currentScores.stress > 70 ? 'bg-red-500' : currentScores.stress > 48 ? 'bg-orange-400' : 'bg-emerald-400 animate-pulse'}`} />
           </div>
           <div className="flex items-baseline justify-between mt-1">
@@ -108,56 +108,56 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
         {/* Metric 2 - Motivation Score */}
         <div id="metric-card-motivation" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">MOTIVATION</span>
+            <span className="text-[9px] font-bold font-mono text-slate-500 uppercase tracking-wider">MOTIVATION</span>
             <span className="text-indigo-400 text-[10px] font-mono">★</span>
           </div>
           <div className="flex items-baseline justify-between mt-1">
             <span className="text-2xl font-serif text-slate-850">
               {latestEntry ? `${currentScores.motivation}%` : '──'}
             </span>
-            <span className="text-[8px] font-mono text-slate-450 uppercase">DRIVE</span>
+            <span className="text-[8px] font-mono text-slate-600 uppercase">DRIVE</span>
           </div>
         </div>
 
         {/* Metric 3 - Focus Score */}
         <div id="metric-card-focus" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">FOCUS RANGE</span>
+            <span className="text-[9px] font-bold font-mono text-slate-500 uppercase tracking-wider">FOCUS RANGE</span>
             <span className="text-indigo-500 text-[8px] italic font-serif">Peak</span>
           </div>
           <div className="flex items-baseline justify-between mt-1">
             <span className="text-2xl font-serif text-slate-850">
               {latestEntry ? `${currentScores.focus}%` : '──'}
             </span>
-            <span className="text-[8px] font-mono text-slate-450 uppercase">ATTN</span>
+            <span className="text-[8px] font-mono text-slate-600 uppercase">ATTN</span>
           </div>
         </div>
 
         {/* Metric 4 - Confidence Score */}
         <div id="metric-card-confidence" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">CONFIDENCE</span>
+            <span className="text-[9px] font-bold font-mono text-slate-500 uppercase tracking-wider">CONFIDENCE</span>
             <span className="text-emerald-500 text-[10px] font-mono">▲</span>
           </div>
           <div className="flex items-baseline justify-between mt-1">
             <span className="text-2xl font-serif text-slate-850">
-              {latestEntry ? `${currentScores.confidence}%` : '──'}
+              {latestEntry ? `${currentScores.focus}%` : '──'}
             </span>
-            <span className="text-[8px] font-mono text-slate-455 uppercase">RECALL</span>
+            <span className="text-[8px] font-mono text-slate-600 uppercase">RECALL</span>
           </div>
         </div>
 
         {/* Metric 5 - Burnout Risk level card */}
         <div id="metric-card-burnout" className="bg-white p-3 px-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between h-20 col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider">BURNOUT RISK</span>
+            <span className="text-[9px] font-bold font-mono text-slate-500 uppercase tracking-wider">BURNOUT RISK</span>
             <Flame className={`w-3 h-3 ${currentRisk === "High" ? "text-red-500 fill-red-100 animate-pulse" : currentRisk === "Medium" ? "text-orange-400" : "text-emerald-400"}`} />
           </div>
           <div className="flex items-baseline justify-between mt-1">
             <span className={`text-xl font-serif font-bold ${currentRisk === "High" ? "text-red-650 animate-pulse" : currentRisk === "Medium" ? "text-orange-500" : "text-emerald-600"}`}>
               {latestEntry ? currentRisk : '──'}
             </span>
-            <span className="text-[8px] font-mono text-slate-410 uppercase">PROB</span>
+            <span className="text-[8px] font-mono text-slate-600 uppercase">PROB</span>
           </div>
         </div>
       </div>
@@ -194,8 +194,8 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
           <div id="triggers-summary-panel" className="bg-white rounded-xl p-4.5 border border-slate-100 shadow-sm flex flex-col h-[180px]">
             <div className="mb-2.5 flex justify-between items-center">
               <div>
-                <h4 className="text-[9px] font-bold tracking-wider text-slate-400 uppercase">PSYCHOLOGICAL IMPEDANCES</h4>
-                <p className="text-[10px] text-slate-400">Active stress channels flagged by Gemini.</p>
+                <h4 className="text-[9px] font-bold tracking-wider text-slate-600 uppercase">PSYCHOLOGICAL IMPEDANCES</h4>
+                <p className="text-[10px] text-slate-500">Active stress channels flagged by Gemini.</p>
               </div>
               <span className="text-[9px] font-mono text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded font-bold">
                 {recentlyDetectedTriggers.length} Blockers
@@ -205,17 +205,17 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
             <div className="flex-1 space-y-1.5 overflow-y-auto max-h-[125px] pr-1">
               {recentlyDetectedTriggers.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-3 bg-slate-50/50 rounded-lg border border-dashed border-slate-100">
-                  <span className="text-[10px] text-slate-400 font-mono">No telemetry indicators available. Try recording a journal first.</span>
+                  <span className="text-[10px] text-slate-500 font-mono">No telemetry indicators available. Try recording a journal first.</span>
                 </div>
               ) : (
                 recentlyDetectedTriggers.map((t, idx) => (
-                  <div key={idx} className="p-2 bg-slate-50 rounded-lg flex items-center justify-between border border-slate-100/60 hover:bg-slate-100/40 transition-all">
-                    <div className="space-y-0.5 pr-4">
-                      <p className="text-xs font-semibold text-slate-700">{t.trigger}</p>
-                      <p className="text-[9px] text-slate-400 truncate max-w-[280px]">{t.description}</p>
+                    <div key={idx} className="p-2 bg-slate-50 rounded-lg flex items-center justify-between border border-slate-100/60 hover:bg-slate-100/40 transition-all">
+                      <div className="space-y-0.5 pr-4">
+                        <p className="text-xs font-semibold text-slate-700">{t.trigger}</p>
+                        <p className="text-[9px] text-slate-500 truncate max-w-[280px]">{t.description}</p>
+                      </div>
+                      <span className="text-[9px] font-mono font-bold text-indigo-650 bg-indigo-50 px-1.5 py-0.5 rounded-md">{t.score}%</span>
                     </div>
-                    <span className="text-[9px] font-mono font-bold text-indigo-650 bg-indigo-50 px-1.5 py-0.5 rounded-md">{t.score}%</span>
-                  </div>
                 ))
               )}
             </div>
@@ -227,8 +227,8 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
           <div>
             <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-2.5">
               <div>
-                <h3 className="text-[9px] font-bold tracking-wider text-slate-400 uppercase">STUDENT CHRONOLOGY</h3>
-                <p className="text-[10px] text-slate-400">Archived daily logs & telemetry records.</p>
+                <h3 className="text-[9px] font-bold tracking-wider text-slate-600 uppercase">STUDENT CHRONOLOGY</h3>
+                <p className="text-[10px] text-slate-500">Archived daily logs & telemetry records.</p>
               </div>
               <span className="text-[9px] font-bold font-mono text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
                 {entries.length} Logs
@@ -239,7 +239,7 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
               <div className="space-y-1.5 mb-2 pb-2.5 border-b border-slate-50">
                 {/* Risk profile filters - Condensed */}
                 <div className="flex items-center gap-1 text-[9px]">
-                  <span className="text-[8px] font-mono uppercase text-slate-400 tracking-wider w-14 text-left shrink-0">Pacing Risk:</span>
+                  <span className="text-[8px] font-mono uppercase text-slate-500 tracking-wider w-14 text-left shrink-0">Pacing Risk:</span>
                   <div className="flex flex-wrap gap-1 items-center">
                     <button
                       onClick={() => setSelectedRisk("All")}
@@ -268,7 +268,7 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
                 {/* Dynamic AI detected pattern filters - Condensed */}
                 {dynamicPatterns.length > 0 && (
                   <div className="flex items-center gap-1 text-[9px]">
-                    <span className="text-[8px] font-mono uppercase text-slate-400 tracking-wider w-14 text-left shrink-0">Mood Tag:</span>
+                    <span className="text-[8px] font-mono uppercase text-slate-500 tracking-wider w-14 text-left shrink-0">Mood Tag:</span>
                     <div className="flex flex-wrap gap-1 max-h-12 overflow-y-auto pr-1">
                       <button
                         onClick={() => setSelectedPattern("All")}
@@ -333,14 +333,14 @@ export default function DashboardOverview({ entries, onNavigateTab, onSelectEntr
                         {entry.analysis?.burnoutRisk || "Low"}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-455 truncate">
+                    <p className="text-[10px] text-slate-600 truncate">
                       {entry.text}
                     </p>
                   </div>
                   
                   <div className="flex items-center gap-2 shrink-0 font-mono">
                     <div className="text-right">
-                      <span className="text-[8px] text-slate-400 block uppercase font-bold">STRESS</span>
+                      <span className="text-[8px] text-slate-500 block uppercase font-bold">STRESS</span>
                       <span className="text-[9px] font-bold text-slate-700">{entry.scores.stress}%</span>
                     </div>
                     <div className="w-px h-4 bg-slate-100" />

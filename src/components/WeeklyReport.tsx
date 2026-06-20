@@ -249,7 +249,7 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Stress metric block */}
               <div className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Stress Delta</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Stress Delta</span>
                 <div className="flex items-center gap-2 mt-2">
                   {report.stressTrend === "up" ? (
                     <TrendingUp className="w-4 h-4 text-red-500 shrink-0 animate-bounce" />
@@ -262,12 +262,12 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
                     {report.stressTrend === "stable" ? "Stable" : `${report.stressTrend === "up" ? '⬆' : '⬇'} ${report.stressChangePercentage}%`}
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 mt-4 font-mono uppercase tracking-widest">Cumulative Tension Weight</p>
+                <p className="text-[9px] text-slate-500 mt-4 font-mono uppercase tracking-widest font-semibold">Cumulative Tension Weight</p>
               </div>
 
               {/* Confidence metric block */}
               <div className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Confidence Delta</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Confidence Delta</span>
                 <div className="flex items-center gap-2 mt-2">
                   {report.confidenceTrend === "up" ? (
                     <TrendingUp className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -280,12 +280,12 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
                     {report.confidenceTrend === "stable" ? "Stable" : `${report.confidenceTrend === "up" ? '⬆' : '⬇'} ${report.confidenceChangePercentage}%`}
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 mt-4 font-mono uppercase tracking-widest">Self-efficacy Rating</p>
+                <p className="text-[9px] text-slate-500 mt-4 font-mono uppercase tracking-widest font-semibold">Self-efficacy Rating</p>
               </div>
 
               {/* Focus metric block */}
               <div className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Focus Stability</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Focus Stability</span>
                 <div className="flex items-center gap-2 mt-2">
                   {report.focusTrend === "up" ? (
                     <TrendingUp className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -298,18 +298,18 @@ export default function WeeklyReport({ entries }: WeeklyReportProps) {
                     {report.focusTrend === "stable" ? "Stable" : `${report.focusTrend === "up" ? '⬆' : '⬇'} ${report.focusChangePercentage}%`}
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 mt-4 font-mono uppercase tracking-widest">Task duration index</p>
+                <p className="text-[9px] text-slate-500 mt-4 font-mono uppercase tracking-widest font-semibold">Task duration index</p>
               </div>
 
               {/* Burnout trend risk block */}
               <div className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between min-h-[140px]">
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold block">Burnout Trend</span>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">Burnout Trend</span>
                 <div className="flex items-baseline mt-2">
                   <span className={`text-xl font-semibold tracking-wide ${report.burnoutRiskTrend === "High" ? "text-red-600" : report.burnoutRiskTrend === "Medium" ? "text-orange-500" : "text-emerald-600"}`}>
                     {report.burnoutRiskTrend} Risk
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400 mt-4 font-mono uppercase tracking-widest">Cumulative Exhaustion</p>
+                <p className="text-[9px] text-slate-500 mt-4 font-mono uppercase tracking-widest font-semibold">Cumulative Exhaustion</p>
               </div>
             </div>
 

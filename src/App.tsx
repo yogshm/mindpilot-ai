@@ -123,19 +123,7 @@ export default function App() {
       async (snapshot) => {
         try {
           if (snapshot.empty) {
-            // Seed Firestore with initial user-scoped mock data if empty so the user has immediate historical telemetry
-            const seeds = getInitialEntries();
-            for (const seed of seeds) {
-              try {
-                const userScopedSeed = {
-                  ...seed,
-                  userId: user.uid
-                };
-                await setDoc(doc(db, "journal_entries", seed.id), userScopedSeed);
-              } catch (writeErr) {
-                handleFirestoreError(writeErr, OperationType.WRITE, `journal_entries/${seed.id}`);
-              }
-            }
+            setEntries([]);
           } else {
             const fetchedEntries = snapshot.docs.map(doc => doc.data() as JournalEntry);
             // Client-side sort by date descending to ensure robust ordering

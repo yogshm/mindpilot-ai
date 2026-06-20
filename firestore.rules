@@ -16,11 +16,11 @@ service cloud.firestore {
     }
 
     function isDocOwner() {
-      return request.auth.uid == resource.data.userId;
+      return request.auth.uid == resource.data.get('userId', '');
     }
 
     function isNewDocOwner() {
-      return request.auth.uid == request.resource.data.userId;
+      return request.auth.uid == request.resource.data.get('userId', '');
     }
 
     function isValidId(id) {
@@ -34,6 +34,11 @@ service cloud.firestore {
 
     // 3. Journals Collection Rules
     match /journals/{journalId} {
+      allow read, delete: if isSignedIn() && isDocOwner();
+      allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
+    }
+
+    match /journal_entries/{journalId} {
       allow read, delete: if isSignedIn() && isDocOwner();
       allow create, update: if isSignedIn() && isNewDocOwner() && isValidId(journalId);
     }

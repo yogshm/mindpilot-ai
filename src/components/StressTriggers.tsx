@@ -124,7 +124,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
     <div id="triggers-view-container" className="space-y-8 animate-fadeIn">
       <div className="space-y-2">
         <h3 className="text-2xl font-light font-serif text-slate-800">AI Stress Trigger Detector</h3>
-        <p className="text-slate-400 text-xs font-sans">
+        <p className="text-slate-500 text-xs font-sans">
           Isolation matrix identifying hidden physiological stressors and academic environments blocking cognitive absorption.
         </p>
       </div>
@@ -134,7 +134,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
         <div className="md:col-span-6 space-y-5">
           <div>
             <h4 className="text-xs font-bold tracking-widest text-[#4f46e5] uppercase mb-1.5 font-mono">Trigger Query Console</h4>
-            <p className="text-slate-400 text-xs mt-1 leading-relaxed font-sans">
+            <p className="text-slate-500 text-xs mt-1 leading-relaxed font-sans">
               Type or select an academic pressure statement. The Copilot compiles stress factors and computes health confidence indicators dynamically.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
                 </div>
 
                 <div className="space-y-1">
-                  <h5 className="text-[10px] font-bold uppercase text-slate-400 font-mono">Stress Trigger Flagged:</h5>
+                  <h5 className="text-[10px] font-bold uppercase text-slate-500 font-mono">Stress Trigger Flagged:</h5>
                   <p className="text-lg font-light text-slate-800 font-serif italic">
                     "{classificationResult.trigger}"
                   </p>
@@ -220,7 +220,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
                 className="text-center p-8 bg-transparent border border-slate-200 border-dashed rounded-2xl flex flex-col items-center justify-center min-h-[140px]"
               >
                 <HelpCircle className="w-8 h-8 text-slate-300 mb-2 animate-pulse" />
-                <p className="text-xs text-slate-400 font-sans font-light">Classify query statements to evaluate confidence scores immediately.</p>
+                <p className="text-xs text-slate-500 font-sans font-light">Classify query statements to evaluate confidence scores immediately.</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -229,7 +229,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
 
       {/* Discovered static/dynamic Trigger Grid Card List */}
       <div>
-        <h4 className="text-xs font-bold tracking-widest text-slate-400 uppercase font-mono mb-6">Established Study Stressors</h4>
+        <h4 className="text-xs font-bold tracking-widest text-slate-500 uppercase font-mono mb-6">Established Study Stressors</h4>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {DEFAULT_TRIGGERS_INFO.map((base, idx) => {
@@ -254,7 +254,7 @@ export default function StressTriggers({ latestEntry }: StressTriggersProps) {
                         HIGH DYNAMIC
                       </span>
                     ) : (
-                      <span className="text-[9px] font-mono font-bold text-slate-400 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full tracking-wider">
+                      <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full tracking-wider">
                         MAPPED
                       </span>
                     )}

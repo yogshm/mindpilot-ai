@@ -402,7 +402,7 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                           <span>{tpl.text}</span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-slate-400 bg-white border border-slate-150 px-2 py-0.5 rounded-md group-hover:text-indigo-600 group-hover:border-indigo-100 shrink-0">
+                      <span className="text-[10px] font-mono font-bold text-slate-500 bg-white border border-slate-150 px-2 py-0.5 rounded-md group-hover:text-indigo-600 group-hover:border-indigo-100 shrink-0">
                         +{tpl.metric}
                       </span>
                     </button>
@@ -420,7 +420,7 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 mb-6">
                     <div>
                       <h4 className="text-md font-medium text-slate-800">Your Daily Slate</h4>
-                      <p className="text-xs text-slate-400 font-sans">Active objectives log for this interval</p>
+                      <p className="text-xs text-slate-600 font-sans font-medium">Active objectives log for this interval</p>
                     </div>
 
                     <div className="flex gap-1 bg-slate-50 rounded-full p-1 border border-slate-100 self-start sm:self-center">
@@ -443,8 +443,8 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                   {filteredGoals.length === 0 ? (
                     <div className="h-[280px] flex flex-col items-center justify-center text-center p-6 border border-dashed border-slate-200 rounded-[2rem]">
                       <ClipboardCheck className="w-10 h-10 text-slate-200 mb-3" />
-                      <p className="text-xs text-slate-400 font-medium font-sans">Focus matrix currently pristine</p>
-                      <p className="text-[10px] text-slate-400 mt-1 max-w-xs leading-normal">
+                      <p className="text-xs text-slate-500 font-semibold font-sans">Focus matrix currently pristine</p>
+                      <p className="text-[10px] text-slate-500 mt-1 max-w-xs leading-normal font-medium">
                         You haven't defined any {activeCategoryFilter.toLowerCase() === "all" ? "" : activeCategoryFilter.toLowerCase() + " "} goals. Check suggestions or use the creator.
                       </p>
                     </div>
@@ -459,7 +459,7 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                             exit={{ opacity: 0, scale: 0.95 }}
                             className={`p-4 rounded-2xl flex items-center justify-between border transition-colors group
                               ${g.completed 
-                                ? "bg-slate-50/50 border-slate-100 text-slate-400" 
+                                ? "bg-slate-50/50 border-slate-100 text-slate-500" 
                                 : "bg-[#F9FAFB] border-slate-100 text-slate-700 hover:border-slate-200"}`}
                           >
                             <div className="flex items-center gap-3.5 flex-1 select-none cursor-pointer" onClick={() => toggleGoal(g.id)}>
@@ -467,13 +467,13 @@ export default function DailyGoals({ goals, onUpdateGoals, entriesCountForToday 
                                 {g.completed ? (
                                   <CheckCircle2 className="w-5 h-5 text-indigo-500 fill-indigo-50" />
                                 ) : (
-                                  <Circle className="w-5 h-5 text-slate-300 group-hover:text-slate-400" />
+                                  <Circle className="w-5 h-5 text-slate-300 group-hover:text-slate-455" />
                                 )}
                               </span>
                               
                               <div className="space-y-0.5">
                                 <span className={`text-xs leading-relaxed break-words font-sans
-                                  ${g.completed ? "line-through text-slate-400 decoration-slate-300" : "font-medium"}`}
+                                  ${g.completed ? "line-through text-slate-500 decoration-slate-300" : "font-medium"}`}
                                 >
                                   {g.text}
                                 </span>
